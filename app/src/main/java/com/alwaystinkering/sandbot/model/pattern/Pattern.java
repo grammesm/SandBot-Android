@@ -58,6 +58,16 @@ public class Pattern {
         return expressionString;
     }
 
+    public String toJson() {
+        StringBuilder json = new StringBuilder();
+
+        json.append("\n\t\t\"").append(name).append("\":\n\t\t{\n")
+                .append("\t\t\t\"setup\":\"").append(declarationString).append("\"\n")
+                .append("\t\t\t\"loop\":\"").append(expressionString).append("\"\n")
+                .append("\t\t}\n");
+        return json.toString();
+    }
+
     public void reset() {
         runningParamToValue.clear();
         runningParamToValue.putAll(paramToValue);

@@ -74,6 +74,39 @@ public class SandBotSettings implements Serializable {
 
     }
 
+    public String toJson() {
+        StringBuilder json = new StringBuilder();
+
+        json.append("{\n")
+                .append("\t\"maxCfgLen\":").append(String.valueOf(maxCfgLen)).append("\n")
+                .append("\t\"name\":\"").append(name).append("\"\n")
+                .append("\t\"patterns\":").append("\n")
+                .append("\t{");
+        int count = 1;
+        for (Pattern pattern : patterns.values()) {
+            json.append(pattern.toJson());
+            if (count != patterns.size()) {
+                json.append(",\n");
+            }
+            count++;
+        }
+        json.append("\t},\n")
+                .append("\t\"sequences\":").append("\n")
+                .append("\t{\n");
+//        for (Sequence sequence : sequences.values()) {
+//        json.append(sequence.toJson());
+//        if (count != sequences.size()) {
+//            json.append(",\n");
+//        }
+//        count++;
+//        }
+        json.append("\t},\n")
+                .append("\t\"startup\":\"").append(startup).append("\"\n")
+                .append("}");
+
+        return json.toString();
+    }
+
     @Override
     public String toString() {
         return "SandBotSettings{" +
