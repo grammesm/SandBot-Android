@@ -56,6 +56,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/darkerSand"
             android:padding="6dp">
 
             <TextView
@@ -70,6 +71,7 @@
                 android:textColor="@color/white"
                 android:textStyle="bold" />
             <ImageView
+                android:id="@+id/sandBotPatternAdd"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_alignParentEnd="true"
@@ -93,6 +95,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/darkerSand"
             android:padding="6dp">
 
             <TextView

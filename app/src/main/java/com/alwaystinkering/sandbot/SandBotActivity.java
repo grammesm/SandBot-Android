@@ -1,5 +1,6 @@
 package com.alwaystinkering.sandbot;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,12 +10,15 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.alwaystinkering.sandbot.model.pattern.Pattern;
 import com.alwaystinkering.sandbot.model.state.SandBotStateManager;
 import com.alwaystinkering.sandbot.model.web.Result;
 import com.alwaystinkering.sandbot.model.web.SandBotWeb;
+import com.alwaystinkering.sandbot.ui.pattern.PatternEditActivity;
 import com.alwaystinkering.sandbot.ui.pattern.PatternListAdapter;
 
 import java.io.IOException;
@@ -31,6 +35,7 @@ public class SandBotActivity extends AppCompatActivity {
 
 
     private ListView patternList;
+    private ImageView patternAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +124,16 @@ public class SandBotActivity extends AppCompatActivity {
             }
         });
 
+        patternAdd = findViewById(R.id.sandBotPatternAdd);
+        patternAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent editIntent = new Intent(SandBotActivity.this, PatternEditActivity.class);
+                SandBotActivity.this.startActivity(editIntent);
+
+            }
+        });
+
         patternList = findViewById(R.id.sandPatternList);
     }
 
@@ -141,8 +156,9 @@ public class SandBotActivity extends AppCompatActivity {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
                     String json = response.body().string();
+                    Log.d(TAG, "Return JSON: " + json);
                     SandBotStateManager.getSandBotSettings().parse(json);
-                    Log.d(TAG, "onResponse: " + SandBotStateManager.getSandBotSettings().toString());
+                    Log.d(TAG, "onResponse : " + SandBotStateManager.getSandBotSettings().toJson());
                     PatternListAdapter patternListAdapter =
                             new PatternListAdapter(SandBotActivity.this, 0, new ArrayList<>(SandBotStateManager.getSandBotSettings().getPatterns().values()));
                     patternList.setAdapter(patternListAdapter);

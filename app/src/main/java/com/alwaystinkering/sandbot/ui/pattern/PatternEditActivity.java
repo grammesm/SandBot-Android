@@ -1,6 +1,7 @@
 package com.alwaystinkering.sandbot.ui.pattern;
 
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import com.alwaystinkering.sandbot.R;
 import com.alwaystinkering.sandbot.model.pattern.Pattern;
 import com.alwaystinkering.sandbot.model.state.SandBotStateManager;
+import com.alwaystinkering.sandbot.model.web.SandBotSettings;
 
 
 public class PatternEditActivity extends AppCompatActivity {
@@ -25,8 +27,11 @@ public class PatternEditActivity extends AppCompatActivity {
     private Button validateButton;
     private ImageView check;
     private Button simButton;
+    private Button saveButton;
 
     private Pattern pattern;
+
+    private String originalName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,8 +40,16 @@ public class PatternEditActivity extends AppCompatActivity {
 
         if (getIntent().getExtras() != null) {
             Log.d(TAG, "Extras supplied");
-            String name = getIntent().getStringExtra(Pattern.PATTERN_NAME_EXTRA_KEY);
-            pattern = SandBotStateManager.getSandBotSettings().getPatterns().get(name);
+            originalName = getIntent().getStringExtra(Pattern.PATTERN_NAME_EXTRA_KEY);
+            if (originalName != null) {
+                pattern = SandBotStateManager.getSandBotSettings().getPatterns().get(originalName);
+            } else {
+                Log.d(TAG, "Pattern name not found!");
+                pattern = new Pattern("", "", "");
+            }
+        } else {
+            Log.d(TAG, "No pattern name defined, creating new");
+            pattern = new Pattern("", "", "");
         }
 
         name = findViewById(R.id.patternNameInput);
@@ -77,6 +90,22 @@ public class PatternEditActivity extends AppCompatActivity {
                 textChanged();
             }
         });
+        name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                textChanged();
+            }
+        });
         validateButton = findViewById(R.id.patternValidateButton);
         check = findViewById(R.id.validationCheck);
         simButton = findViewById(R.id.patternRunButton);
@@ -88,7 +117,18 @@ public class PatternEditActivity extends AppCompatActivity {
             }
         });
 
+        saveButton = findViewById(R.id.patternSaveButton);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                savePattern();
+            }
+        });
+
+
+        saveButton.setEnabled(false);
         simButton.setEnabled(false);
+
 
         validateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +136,7 @@ public class PatternEditActivity extends AppCompatActivity {
                 if (pattern != null) {
                     boolean valid = pattern.validate();
                     simButton.setEnabled(valid);
+                    saveButton.setEnabled(valid);
                     if (valid) {
                         check.setVisibility(View.VISIBLE);
                         // Pop up log
@@ -115,13 +156,41 @@ public class PatternEditActivity extends AppCompatActivity {
     }
 
     private void textChanged() {
-        pattern.setDeclarationString(declaraions.getText().toString());
-        pattern.setExpressionString(expressions.getText().toString());
+        pattern.setName(name.getText().toString().trim());
+        pattern.setDeclarationString(declaraions.getText().toString().trim());
+        pattern.setExpressionString(expressions.getText().toString().trim());
+        saveButton.setEnabled(false);
         simButton.setEnabled(false);
         check.setVisibility(View.GONE);
     }
 
     private void savePattern() {
+        if (name.getText().toString().trim().isEmpty()) {
+            Log.e(TAG, "Name can not be empty!");
+            new AlertDialog.Builder(PatternEditActivity.this)
+                    .setTitle("ERROR")
+                    .setMessage("Pattern name must be defined to save")
+                    .setPositiveButton("OK", null)
+                    .show();
+            return;
+        }
 
+        // Remove the old pattern if it exists
+        if (originalName != null) {
+            SandBotStateManager.getSandBotSettings().getPatterns().remove(originalName);
+        }
+
+        // Save the newly created/edited pattern
+        SandBotStateManager.getSandBotSettings().getPatterns().put(pattern.getName(), pattern);
+        SandBotStateManager.getSandBotSettings().writeConfig(new SandBotSettings.ConfigWriteListener() {
+            @Override
+            public void writeConfigResult(boolean success) {
+                if (success) {
+                    PatternEditActivity.this.finish();
+                } else {
+                    Log.e(TAG, "Write Failed!");
+                }
+            }
+        });
     }
 }

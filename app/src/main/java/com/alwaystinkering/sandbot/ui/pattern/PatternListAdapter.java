@@ -18,6 +18,7 @@ import com.alwaystinkering.sandbot.SandBotActivity;
 import com.alwaystinkering.sandbot.model.pattern.Pattern;
 import com.alwaystinkering.sandbot.model.state.SandBotStateManager;
 import com.alwaystinkering.sandbot.model.web.Result;
+import com.alwaystinkering.sandbot.model.web.SandBotSettings;
 import com.alwaystinkering.sandbot.model.web.SandBotWeb;
 
 import java.util.List;
@@ -104,8 +105,16 @@ public class PatternListAdapter extends ArrayAdapter<Pattern> {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 SandBotStateManager.getSandBotSettings().getPatterns().remove(pattern.getName());
-                                SandBotStateManager.getSandBotSettings().writeConfig();
-                                context.getSettings();
+                                SandBotStateManager.getSandBotSettings().writeConfig(new SandBotSettings.ConfigWriteListener() {
+                                    @Override
+                                    public void writeConfigResult(boolean success) {
+                                        if (success) {
+                                            context.getSettings();
+                                        } else {
+                                            Log.e(TAG, "Write Failed!");
+                                        }
+                                    }
+                                });
                             }
                         }).show();
             }
