@@ -1,11 +1,14 @@
 package com.alwaystinkering.sandbot;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -14,12 +17,12 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.alwaystinkering.sandbot.model.pattern.Pattern;
 import com.alwaystinkering.sandbot.model.state.SandBotStateManager;
 import com.alwaystinkering.sandbot.model.web.Result;
 import com.alwaystinkering.sandbot.model.web.SandBotWeb;
 import com.alwaystinkering.sandbot.ui.pattern.PatternEditActivity;
 import com.alwaystinkering.sandbot.ui.pattern.PatternListAdapter;
+import com.alwaystinkering.sandbot.ui.settings.SettingsActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,10 +40,29 @@ public class SandBotActivity extends AppCompatActivity {
     private ListView patternList;
     private ImageView patternAdd;
 
+    private SharedPreferences sharedPreferences;
+
+    private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+            if (s.equals(getResources().getString(R.string.pref_server_key))) {
+                String serverIp = sharedPreferences.getString(getResources().getString(R.string.pref_server_key),"").trim();
+                // todo validate
+                Log.d(TAG, "Creating new server interface to: " + serverIp);
+                SandBotWeb.createInterface(serverIp);
+                getSettings();
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sand_bot);
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        sharedPreferences.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -141,6 +163,17 @@ public class SandBotActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+        }
+        return false;
     }
 
     @Override

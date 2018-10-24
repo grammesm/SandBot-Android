@@ -20,4 +20,14 @@ public class SandBotWeb {
         return sandBotInterface;
     }
 
+    public static void createInterface(String ip) {
+        retrofit = new Retrofit.Builder()
+                .baseUrl("http://" + ip)
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
+                        .setLenient()
+                        .create()))
+                .build();
+        sandBotInterface = retrofit.create(SandBotInterface.class);
+    }
+
 }
