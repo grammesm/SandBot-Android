@@ -99,6 +99,7 @@
             android:padding="6dp">
 
             <TextView
+                android:id="@+id/sequenceHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -110,6 +111,7 @@
                 android:textStyle="bold"/>
 
             <ImageView
+                android:id="@+id/sandBotSequenceAdd"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_alignParentEnd="true"
@@ -118,6 +120,7 @@
         </RelativeLayout>
 
         <ListView
+            android:id="@+id/sandSequenceList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>

@@ -25,6 +25,9 @@ public interface SandBotInterface {
     @GET("/pattern/{name}")
     Call<Result> startPattern(@Path("name") String name);
 
+    @GET("/sequence/{name}")
+    Call<Result> startSequence(@Path("name") String name);
+
     @GET("/getsettings")
     Call<ResponseBody> getSettings();
 

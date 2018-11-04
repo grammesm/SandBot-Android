@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/sequenceTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:text="SequenceName"
+        android:textColor="@color/white"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/sequenceDelete"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/delete_circle_outline" />
+
+    <ImageView
+        android:id="@+id/sequenceEdit"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_toStartOf="@id/sequenceDelete"
+        android:layout_toLeftOf="@id/sequenceDelete"
+        android:src="@drawable/circle_edit_outline" />
+
+    <ImageView
+        android:id="@+id/sequenceRun"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_toStartOf="@id/sequenceEdit"
+        android:layout_toLeftOf="@id/sequenceEdit"
+        android:src="@drawable/play_circle_outline" />
+    <ImageView
+        android:id="@+id/sequenceAutoRun"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_toStartOf="@id/sequenceRun"
+        android:layout_toLeftOf="@id/sequenceRun"
+        android:src="@drawable/autorenew" />
+</RelativeLayout>

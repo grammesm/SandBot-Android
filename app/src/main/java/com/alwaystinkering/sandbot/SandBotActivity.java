@@ -22,6 +22,7 @@ import com.alwaystinkering.sandbot.model.web.Result;
 import com.alwaystinkering.sandbot.model.web.SandBotWeb;
 import com.alwaystinkering.sandbot.ui.pattern.PatternEditActivity;
 import com.alwaystinkering.sandbot.ui.pattern.PatternListAdapter;
+import com.alwaystinkering.sandbot.ui.sandbot.SequenceListAdapter;
 import com.alwaystinkering.sandbot.ui.settings.SettingsActivity;
 
 import java.io.IOException;
@@ -38,6 +39,7 @@ public class SandBotActivity extends AppCompatActivity {
 
 
     private ListView patternList;
+    private ListView sequenceList;
     private ImageView patternAdd;
 
     private SharedPreferences sharedPreferences;
@@ -157,6 +159,7 @@ public class SandBotActivity extends AppCompatActivity {
         });
 
         patternList = findViewById(R.id.sandPatternList);
+        sequenceList = findViewById(R.id.sandSequenceList);
     }
 
     @Override
@@ -183,6 +186,7 @@ public class SandBotActivity extends AppCompatActivity {
     }
 
     public void getSettings() {
+        Log.d(TAG, "Get Settings");
         Call<ResponseBody> call = SandBotWeb.getInterface().getSettings();
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -195,6 +199,10 @@ public class SandBotActivity extends AppCompatActivity {
                     PatternListAdapter patternListAdapter =
                             new PatternListAdapter(SandBotActivity.this, 0, new ArrayList<>(SandBotStateManager.getSandBotSettings().getPatterns().values()));
                     patternList.setAdapter(patternListAdapter);
+
+                    SequenceListAdapter sequenceListAdapter =
+                            new SequenceListAdapter(SandBotActivity.this, 0, new ArrayList<>(SandBotStateManager.getSandBotSettings().getSequences().values()));
+                    sequenceList.setAdapter(sequenceListAdapter);
 
                 } catch (IOException e) {
                     e.printStackTrace();

@@ -3,6 +3,7 @@ package com.alwaystinkering.sandbot.model.web;
 import android.util.Log;
 
 import com.alwaystinkering.sandbot.model.pattern.Pattern;
+import com.alwaystinkering.sandbot.model.sequence.Sequence;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -31,7 +32,7 @@ public class SandBotSettings {
     private int maxCfgLen;
     private String name;
     private Map<String, Pattern> patterns = new HashMap<>();
-    //private Sequences sequences;
+    private Map<String, Sequence> sequences = new HashMap<>();
     private String startup;
 
     public Integer getMaxCfgLen() {
@@ -54,6 +55,10 @@ public class SandBotSettings {
         return patterns;
     }
 
+    public Map<String, Sequence> getSequences() {
+        return sequences;
+    }
+
     public String getStartup() {
         return startup;
     }
@@ -70,6 +75,7 @@ public class SandBotSettings {
             setMaxCfgLen(rootObj.getAsJsonPrimitive("maxCfgLen").getAsInt());
             setName(rootObj.getAsJsonPrimitive("name").getAsString());
             setStartup(rootObj.getAsJsonPrimitive("startup").getAsString());
+
             JsonObject patternsObject = rootObj.getAsJsonObject("patterns");
             Set<Map.Entry<String, JsonElement>> entries = patternsObject.entrySet();
             for (Map.Entry<String, JsonElement> entry : entries) {
@@ -85,6 +91,28 @@ public class SandBotSettings {
                     patterns.put(name, new Pattern(name, setup, loop));
                 }
             }
+
+            JsonObject sequencesObject = rootObj.getAsJsonObject("sequences");
+            entries = sequencesObject.entrySet();
+            for (Map.Entry<String, JsonElement> entry : entries) {
+                String name = entry.getKey();
+                JsonObject patternObject = sequencesObject.getAsJsonObject(name);
+                String commands = patternObject.getAsJsonPrimitive("commands").getAsString();
+                int runAtStart = patternObject.getAsJsonPrimitive("runAtStart").getAsInt();
+
+                if (sequences.containsKey(name)) {
+                    sequences.get(name).setCommands(commands);
+                    sequences.get(name).setAutoRun(runAtStart == 1);
+                } else {
+                    sequences.put(name, new Sequence(name, commands, runAtStart == 1));
+                }
+//                if (startup.equals(name)) {
+//                    sequences.get(name).setAutoRun(true);
+//                } else {
+//                    sequences.get(name).setAutoRun(false);
+//                }
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -120,7 +148,7 @@ public class SandBotSettings {
         json.append("{")
                 .append("\"maxCfgLen\":").append(String.valueOf(maxCfgLen)).append(",")
                 .append("\"name\":\"").append(name).append("\",")
-                .append("\"patterns\":").append("")
+                .append("\"patterns\":")
                 .append("{");
         int count = 1;
         for (Pattern pattern : patterns.values()) {
@@ -131,15 +159,16 @@ public class SandBotSettings {
             count++;
         }
         json.append("},")
-                .append("\"sequences\":").append("")
+                .append("\"sequences\":")
                 .append("{");
-//        for (Sequence sequence : sequences.values()) {
-//        json.append(sequence.toJson());
-//        if (count != sequences.size()) {
-//            json.append(",\n");
-//        }
-//        count++;
-//        }
+        count = 1;
+        for (Sequence sequence : sequences.values()) {
+            json.append(sequence.toJson());
+            if (count != sequences.size()) {
+                json.append(",\n");
+            }
+            count++;
+        }
         json.append("},")
                 .append("\"startup\":\"")./*append(startup).*/append("\"")
                 .append("}");
