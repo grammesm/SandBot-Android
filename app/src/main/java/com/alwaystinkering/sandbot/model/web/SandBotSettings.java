@@ -10,7 +10,6 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -35,6 +34,10 @@ public class SandBotSettings {
     private Map<String, Pattern> patterns = new HashMap<>();
     private Map<String, Sequence> sequences = new HashMap<>();
     private String startup;
+
+    private int ledBrightness;
+    private boolean ledAutoDim;
+    private int speed;
 
     public Integer getMaxCfgLen() {
         return maxCfgLen;
@@ -152,6 +155,30 @@ public class SandBotSettings {
                 listener.writeConfigResult(false);
             }
         });
+    }
+
+    public int getLedBrightness() {
+        return ledBrightness;
+    }
+
+    public void setLedBrightness(int ledBrightness) {
+        this.ledBrightness = ledBrightness;
+    }
+
+    public boolean isLedAutoDim() {
+        return ledAutoDim;
+    }
+
+    public void setLedAutoDim(boolean ledAutoDim) {
+        this.ledAutoDim = ledAutoDim;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
     }
 
     public String toJson() {

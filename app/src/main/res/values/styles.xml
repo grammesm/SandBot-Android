@@ -17,14 +17,4 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="navButton" parent="@android:style/Widget.Button">
-        <item name="android:layout_margin">5dp</item>
-        <item name="android:background">@drawable/nav_button_selector</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/nav_button_text_color</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:padding">4dp</item>
-    </style>
 </resources>

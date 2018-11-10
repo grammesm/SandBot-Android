@@ -2,7 +2,6 @@ package com.alwaystinkering.sandbot.ui.sequence;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -15,14 +14,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alwaystinkering.sandbot.R;
-import com.alwaystinkering.sandbot.SandBotActivity;
-import com.alwaystinkering.sandbot.model.pattern.Pattern;
 import com.alwaystinkering.sandbot.model.sequence.Sequence;
 import com.alwaystinkering.sandbot.model.state.SandBotStateManager;
 import com.alwaystinkering.sandbot.model.web.Result;
 import com.alwaystinkering.sandbot.model.web.SandBotSettings;
 import com.alwaystinkering.sandbot.model.web.SandBotWeb;
-import com.alwaystinkering.sandbot.ui.pattern.PatternEditActivity;
+import com.alwaystinkering.sandbot.ui.sandbot.MainActivity;
 
 import java.util.List;
 
@@ -34,7 +31,7 @@ public class SequenceListAdapter extends ArrayAdapter<Sequence> {
 
     private static final String TAG = "SequenceListAdapter";
 
-    private SandBotActivity context;
+    private MainActivity context;
 
     static class ViewHolder {
         public TextView name;
@@ -44,7 +41,7 @@ public class SequenceListAdapter extends ArrayAdapter<Sequence> {
         public ImageView delete;
     }
 
-    public SequenceListAdapter(@NonNull SandBotActivity context, int resource, @NonNull List<Sequence> objects) {
+    public SequenceListAdapter(@NonNull MainActivity context, int resource, @NonNull List<Sequence> objects) {
         super(context, resource, objects);
         this.context = context;
     }
@@ -77,7 +74,7 @@ public class SequenceListAdapter extends ArrayAdapter<Sequence> {
         if (sequence.isAutoRun()) {
             holder.runAtStartup.setColorFilter(context.getResources().getColor(R.color.nav));
         } else {
-            holder.runAtStartup.setColorFilter(Color.argb(255, 255, 255, 255));
+            holder.runAtStartup.setColorFilter(context.getResources().getColor(R.color.dark_gray));
         }
         holder.runAtStartup.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_vertical_margin"
+    tools:context=".ui.sandbot.BotFragment">
+
+    <!--<TextView-->
+        <!--android:id="@+id/name_label"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignBottom="@id/name_input"-->
+        <!--android:layout_marginBottom="10dp"-->
+        <!--android:text="Name: " />-->
+
+    <!--<EditText-->
+        <!--android:id="@+id/name_input"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_toEndOf="@id/name_label"-->
+        <!--android:layout_toRightOf="@id/name_label"-->
+        <!--android:inputType="text|textCapWords"-->
+        <!--android:maxLines="1"-->
+        <!--android:minEms="10" />-->
+
+
+    <include
+        android:id="@+id/led_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/card_led"/>
+
+    <include
+        android:id="@+id/speed_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/card_speed"
+        android:layout_below="@id/led_card" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/botPlay"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/fab_margin"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_marginBottom="72dp"
+            android:layout_weight="1"
+            android:src="@drawable/play" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/botPause"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/fab_margin"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_marginBottom="72dp"
+            android:layout_weight="1"
+            android:src="@drawable/pause" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/botStop"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/fab_margin"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_marginBottom="72dp"
+            android:layout_weight="1"
+            android:src="@drawable/stop" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/botHome"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/fab_margin"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_marginBottom="72dp"
+            android:layout_weight="1"
+            android:src="@drawable/home" />
+
+    </LinearLayout>
+
+</RelativeLayout>

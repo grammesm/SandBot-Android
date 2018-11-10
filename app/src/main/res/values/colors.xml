@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#407ea6</color>
-    <color name="colorPrimaryDark">#407ea6</color>
-    <color name="colorAccent">#74b5b0</color>
+    <color name="colorPrimary">#2196f3</color>
+    <color name="colorPrimaryDark">#1769aa</color>
+    <color name="colorAccent">#33ab9f</color>
 
-    <color name="header">#407ea6</color>
-    <color name="nav">#74b5b0</color>
+    <color name="header">#2196f3</color>
+    <color name="nav">#33ab9f</color>
     <color name="darkerSand">#a89062</color>
     <color name="darkSand">#c0a87a</color>
     <color name="lightSand">#e3cda6</color>
 
+    <color name="green_selected">#33ab9f</color>
+    <color name="red_error">#aa2e25</color>
     <color name="white">#ffffff</color>
+    <color name="dark_gray">#333333</color>
+    <color name="black">#000000</color>
+    <color name="light_gray">#999999</color>
+
 </resources>

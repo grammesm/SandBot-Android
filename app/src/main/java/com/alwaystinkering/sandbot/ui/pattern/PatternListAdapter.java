@@ -14,12 +14,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alwaystinkering.sandbot.R;
-import com.alwaystinkering.sandbot.SandBotActivity;
 import com.alwaystinkering.sandbot.model.pattern.Pattern;
 import com.alwaystinkering.sandbot.model.state.SandBotStateManager;
 import com.alwaystinkering.sandbot.model.web.Result;
 import com.alwaystinkering.sandbot.model.web.SandBotSettings;
 import com.alwaystinkering.sandbot.model.web.SandBotWeb;
+import com.alwaystinkering.sandbot.ui.sandbot.MainActivity;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class PatternListAdapter extends ArrayAdapter<Pattern> {
 
     private static final String TAG = "PatternListAdapter";
 
-    private SandBotActivity context;
+    private MainActivity context;
 
     static class ViewHolder {
         public TextView name;
@@ -40,7 +40,7 @@ public class PatternListAdapter extends ArrayAdapter<Pattern> {
         public ImageView delete;
     }
 
-    public PatternListAdapter(@NonNull SandBotActivity context, int resource, @NonNull List<Pattern> objects) {
+    public PatternListAdapter(@NonNull MainActivity context, int resource, @NonNull List<Pattern> objects) {
         super(context, resource, objects);
         this.context = context;
     }
