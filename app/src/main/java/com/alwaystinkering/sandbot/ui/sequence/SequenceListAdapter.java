@@ -1,4 +1,4 @@
-package com.alwaystinkering.sandbot.ui.sandbot;
+package com.alwaystinkering.sandbot.ui.sequence;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -51,7 +51,7 @@ public class SequenceListAdapter extends ArrayAdapter<Sequence> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull final ViewGroup parent) {
+    public View getView(int position, @Nullable final View convertView, @NonNull final ViewGroup parent) {
         View rowView = convertView;
         // reuse views
         if (rowView == null) {
@@ -79,29 +79,48 @@ public class SequenceListAdapter extends ArrayAdapter<Sequence> {
         } else {
             holder.runAtStartup.setColorFilter(Color.argb(255, 255, 255, 255));
         }
+        holder.runAtStartup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sequence.setAutoRun(!sequence.isAutoRun());
+                if (sequence.isAutoRun()) {
+                    SandBotStateManager.getSandBotSettings().setStartup("g28;" + sequence.getName());
+                } else {
+                    SandBotStateManager.getSandBotSettings().setStartup("");
+                }
+                SandBotStateManager.getSandBotSettings().writeConfig(new SandBotSettings.ConfigWriteListener() {
+                    @Override
+                    public void writeConfigResult(boolean success) {
+                        if (success) {
+                            context.getSettings();
+                        }
+                    }
+                });
+            }
+        });
         holder.run.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Call<Result> call = SandBotWeb.getInterface().startPattern(pattern.getName());
-//                call.enqueue(new Callback<Result>() {
-//                    @Override
-//                    public void onResponse(Call<Result> call, Response<Result> response) {
-//                        Log.d(TAG, "start " + pattern.getName() + " response: " + response.body().toString());
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<Result> call, Throwable t) {
-//                        Log.e(TAG, "start " + pattern.getName() + " fail: " + t.getLocalizedMessage());
-//                    }
-//                });
+                Call<Result> call = SandBotWeb.getInterface().startSequence(sequence.getName());
+                call.enqueue(new Callback<Result>() {
+                    @Override
+                    public void onResponse(Call<Result> call, Response<Result> response) {
+                        Log.d(TAG, "start " + sequence.getName() + " response: " + response.body().toString());
+                    }
+
+                    @Override
+                    public void onFailure(Call<Result> call, Throwable t) {
+                        Log.e(TAG, "start " + sequence.getName() + " fail: " + t.getLocalizedMessage());
+                    }
+                });
             }
         });
         holder.edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent editIntent = new Intent(context, PatternEditActivity.class);
-//                editIntent.putExtra(Pattern.PATTERN_NAME_EXTRA_KEY, pattern.getName());
-//                context.startActivity(editIntent);
+                Intent editIntent = new Intent(context, SequenceEditActivity.class);
+                editIntent.putExtra(Sequence.SEQUENCE_NAME_EXTRA_KEY, sequence.getName());
+                context.startActivity(editIntent);
             }
         });
         holder.delete.setOnClickListener(new View.OnClickListener() {
@@ -109,12 +128,15 @@ public class SequenceListAdapter extends ArrayAdapter<Sequence> {
             public void onClick(View v) {
                 new AlertDialog.Builder(context)
                         .setTitle("Delete " + sequence.getName())
-                        .setMessage("Are you sure you want to delete the pattern " + sequence.getName() + "?")
+                        .setMessage("Are you sure you want to delete the sequence " + sequence.getName() + "?")
                         .setNegativeButton("Cancel", null)
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                SandBotStateManager.getSandBotSettings().getPatterns().remove(sequence.getName());
+                                if (sequence.isAutoRun()) {
+                                    SandBotStateManager.getSandBotSettings().setStartup("");
+                                }
+                                SandBotStateManager.getSandBotSettings().getSequences().remove(sequence.getName());
                                 SandBotStateManager.getSandBotSettings().writeConfig(new SandBotSettings.ConfigWriteListener() {
                                     @Override
                                     public void writeConfigResult(boolean success) {

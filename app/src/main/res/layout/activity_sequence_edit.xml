@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".ui.sequence.SequenceEditActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/sequenceNameHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textColor="#333" />
+
+        <EditText
+            android:id="@+id/sequenceNameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sequenceNameHeader"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/dark_gray_border"
+            android:gravity="top"
+            android:minLines="1"
+            android:padding="4dp"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/sequenceCommandHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sequenceNameInput"
+            android:layout_marginTop="6dp"
+            android:text="Commands"
+            android:textColor="#333" />
+
+        <EditText
+            android:id="@+id/sequenceCommandInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sequenceCommandHeader"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/dark_gray_border"
+            android:gravity="top"
+            android:minLines="10"
+            android:padding="4dp"
+            android:textSize="10sp" />
+
+
+
+        <LinearLayout
+            android:id="@+id/sequenceButtonLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_horizontal|center_vertical">
+            <Button
+                android:id="@+id/sequenceSaveButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</FrameLayout>

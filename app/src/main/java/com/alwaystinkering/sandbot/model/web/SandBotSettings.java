@@ -7,6 +7,7 @@ import com.alwaystinkering.sandbot.model.sequence.Sequence;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -37,6 +38,13 @@ public class SandBotSettings {
 
     public Integer getMaxCfgLen() {
         return maxCfgLen;
+    }
+
+    public void clear() {
+        name = "";
+        patterns.clear();
+        sequences.clear();
+        startup = "";
     }
 
     public void setMaxCfgLen(Integer maxCfgLen) {
@@ -96,9 +104,13 @@ public class SandBotSettings {
             entries = sequencesObject.entrySet();
             for (Map.Entry<String, JsonElement> entry : entries) {
                 String name = entry.getKey();
-                JsonObject patternObject = sequencesObject.getAsJsonObject(name);
-                String commands = patternObject.getAsJsonPrimitive("commands").getAsString();
-                int runAtStart = patternObject.getAsJsonPrimitive("runAtStart").getAsInt();
+                JsonObject sequenceObject = sequencesObject.getAsJsonObject(name);
+                String commands = sequenceObject.getAsJsonPrimitive("commands").getAsString();
+                JsonPrimitive runAtStartPrim = sequenceObject.getAsJsonPrimitive("runAtStart");
+                int runAtStart = 0;
+                if (runAtStartPrim != null) {
+                    runAtStart = runAtStartPrim.getAsInt();
+                }
 
                 if (sequences.containsKey(name)) {
                     sequences.get(name).setCommands(commands);
@@ -170,7 +182,7 @@ public class SandBotSettings {
             count++;
         }
         json.append("},")
-                .append("\"startup\":\"")./*append(startup).*/append("\"")
+                .append("\"startup\":\"").append(startup).append("\"")
                 .append("}");
 
         return json.toString();

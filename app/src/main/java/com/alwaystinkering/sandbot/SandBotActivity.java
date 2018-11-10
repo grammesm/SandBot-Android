@@ -22,7 +22,8 @@ import com.alwaystinkering.sandbot.model.web.Result;
 import com.alwaystinkering.sandbot.model.web.SandBotWeb;
 import com.alwaystinkering.sandbot.ui.pattern.PatternEditActivity;
 import com.alwaystinkering.sandbot.ui.pattern.PatternListAdapter;
-import com.alwaystinkering.sandbot.ui.sandbot.SequenceListAdapter;
+import com.alwaystinkering.sandbot.ui.sequence.SequenceEditActivity;
+import com.alwaystinkering.sandbot.ui.sequence.SequenceListAdapter;
 import com.alwaystinkering.sandbot.ui.settings.SettingsActivity;
 
 import java.io.IOException;
@@ -41,6 +42,7 @@ public class SandBotActivity extends AppCompatActivity {
     private ListView patternList;
     private ListView sequenceList;
     private ImageView patternAdd;
+    private ImageView sequenceAdd;
 
     private SharedPreferences sharedPreferences;
 
@@ -158,6 +160,15 @@ public class SandBotActivity extends AppCompatActivity {
             }
         });
 
+        sequenceAdd = findViewById(R.id.sandBotSequenceAdd);
+        sequenceAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent editIntent = new Intent(SandBotActivity.this, SequenceEditActivity.class);
+                SandBotActivity.this.startActivity(editIntent);
+            }
+        });
+
         patternList = findViewById(R.id.sandPatternList);
         sequenceList = findViewById(R.id.sandSequenceList);
     }
@@ -194,6 +205,7 @@ public class SandBotActivity extends AppCompatActivity {
                 try {
                     String json = response.body().string();
                     Log.d(TAG, "Return JSON: " + json);
+                    SandBotStateManager.getSandBotSettings().clear();
                     SandBotStateManager.getSandBotSettings().parse(json);
                     Log.d(TAG, "onResponse : " + SandBotStateManager.getSandBotSettings().toJson());
                     PatternListAdapter patternListAdapter =

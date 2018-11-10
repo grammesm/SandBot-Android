@@ -2,6 +2,8 @@ package com.alwaystinkering.sandbot.model.sequence;
 
 public class Sequence {
 
+    public static final String SEQUENCE_NAME_EXTRA_KEY = "sequenceName";
+
     private String name;
     private String commands;
     private boolean autoRun;
