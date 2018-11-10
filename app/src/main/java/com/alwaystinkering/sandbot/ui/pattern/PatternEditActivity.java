@@ -1,6 +1,7 @@
 package com.alwaystinkering.sandbot.ui.pattern;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -110,10 +111,13 @@ public class PatternEditActivity extends AppCompatActivity {
         check = findViewById(R.id.validationCheck);
         simButton = findViewById(R.id.patternRunButton);
 
+        String prefRadius = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.pref_diameter_key), getResources().getString(R.string.pref_diameter_default));
+        final int tableRadius = Integer.valueOf(prefRadius);
+
         simButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new PatternSimulationDialog(200, pattern,PatternEditActivity.this).show();
+                new PatternSimulationDialog(tableRadius, pattern, PatternEditActivity.this).show();
             }
         });
 

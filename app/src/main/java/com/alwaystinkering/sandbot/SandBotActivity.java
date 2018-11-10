@@ -1,10 +1,12 @@
 package com.alwaystinkering.sandbot;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -54,6 +56,7 @@ public class SandBotActivity extends AppCompatActivity {
                 // todo validate
                 Log.d(TAG, "Creating new server interface to: " + serverIp);
                 SandBotWeb.createInterface(serverIp);
+                clearView();
                 getSettings();
             }
         }
@@ -67,6 +70,23 @@ public class SandBotActivity extends AppCompatActivity {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
 
+        String serverIp = sharedPreferences.getString(getResources().getString(R.string.pref_server_key),"").trim();
+
+        if (serverIp.equals(getResources().getString(R.string.pref_server_default))) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Enter Robot IP Address")
+                    .setMessage("It appears you do not have an IP address set up for the sand bot, press OK to be taken to settings to enter the IP address of the bot.")
+                    .setNegativeButton("Cancel", null)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(SandBotActivity.this, SettingsActivity.class);
+                            startActivity(intent);
+                        }
+                    }).show();
+        }
+        Log.d(TAG, "Creating new server interface to: " + serverIp);
+        SandBotWeb.createInterface(serverIp);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -226,5 +246,10 @@ public class SandBotActivity extends AppCompatActivity {
                 Log.e(TAG, "onFailure: " + t.getLocalizedMessage());
             }
         });
+    }
+
+    private void clearView() {
+        patternList.setAdapter(null);
+        sequenceList.setAdapter(null);
     }
 }
