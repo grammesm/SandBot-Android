@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
 
-        String serverIp = sharedPreferences.getString(getResources().getString(R.string.pref_server_key),"").trim();
+        String serverIp = sharedPreferences.getString(getResources().getString(R.string.pref_server_key),getResources().getString(R.string.pref_server_default)).trim();
 
         if (serverIp.equals(getResources().getString(R.string.pref_server_default))) {
             new AlertDialog.Builder(this)

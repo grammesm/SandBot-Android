@@ -3,23 +3,26 @@ package com.alwaystinkering.sandbot.ui.sandbot;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.alwaystinkering.sandbot.R;
 import com.alwaystinkering.sandbot.model.state.SandBotStateManager;
 import com.alwaystinkering.sandbot.ui.sequence.SequenceEditActivity;
-import com.alwaystinkering.sandbot.ui.sequence.SequenceListAdapter;
+import com.alwaystinkering.sandbot.ui.sequence.SequenceRecyclerAdapter;
 
 import java.util.ArrayList;
 
 public class SequenceFragment extends SandBotTab {
 
-    private static final String TAG = "BotFragment";
+    private static final String TAG = "SequenceFragment";
 
-    private ListView sequenceList;
+    private RecyclerView sequenceList;
+    private RecyclerView.Adapter sequenceListAdapter;
+    private RecyclerView.LayoutManager sequenceLayoutManager;
     private FloatingActionButton newSequence;
 
     public SequenceFragment() {
@@ -30,6 +33,8 @@ public class SequenceFragment extends SandBotTab {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_sequence, container, false);
         sequenceList = rootView.findViewById(R.id.sandSequenceList);
+        sequenceLayoutManager = new LinearLayoutManager(getActivity());
+        sequenceList.setLayoutManager(sequenceLayoutManager);
         newSequence = rootView.findViewById(R.id.newSequence);
         newSequence.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,10 +51,10 @@ public class SequenceFragment extends SandBotTab {
 
     @Override
     void refresh() {
-        SequenceListAdapter sequenceListAdapter =
-                new SequenceListAdapter((MainActivity) getActivity(), 0, new ArrayList<>(SandBotStateManager.getSandBotSettings().getSequences().values()));
+        sequenceListAdapter =
+                new SequenceRecyclerAdapter((MainActivity) getActivity(),
+                        new ArrayList<>(SandBotStateManager.getSandBotSettings().getSequences().values()));
         sequenceList.setAdapter(sequenceListAdapter);
-
     }
 
     @Override

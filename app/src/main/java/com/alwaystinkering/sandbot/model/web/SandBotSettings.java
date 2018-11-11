@@ -202,6 +202,9 @@ public class SandBotSettings {
                 .append("{");
         count = 1;
         for (Sequence sequence : sequences.values()) {
+            if (sequence.isAutoRun()) {
+                setStartup("g28;" + sequence.getName());
+            }
             json.append(sequence.toJson());
             if (count != sequences.size()) {
                 json.append(",\n");

@@ -3,9 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="16dp"
-    app:cardCornerRadius="4dp"
-    app:cardElevation="4dp"
+    app:cardCornerRadius="3dp"
+    app:cardElevation="3dp"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
@@ -16,23 +15,25 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="@color/nav"
+            android:background="@color/darkerSand"
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/sequenceIcon"
                 android:layout_width="30dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
-                android:src="@drawable/speedometer" />
+                android:src="@drawable/code_greater_than" />
 
             <TextView
+                android:id="@+id/sequenceName"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
                 android:gravity="center_vertical"
-                android:text="Motor Speed"
+                android:text="Sequence Name"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -40,26 +41,42 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:gravity="center_horizontal"
+            android:gravity="end"
             android:orientation="horizontal"
             android:padding="8dp">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/walk" />
-
-            <SeekBar
-                android:id="@+id/speedSeekBar"
-                android:layout_width="0dip"
-                android:layout_height="match_parent"
-                android:layout_weight="0.74" />
 
             <ImageView
+                android:id="@+id/sequenceAutoRun"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/run" />
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/autorenew" />
+
+            <ImageView
+                android:id="@+id/sequenceRun"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/play_circle_outline" />
+
+            <ImageView
+                android:id="@+id/sequenceEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/circle_edit_outline" />
+
+            <ImageView
+                android:id="@+id/sequenceDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/delete_circle_outline" />
+
+
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

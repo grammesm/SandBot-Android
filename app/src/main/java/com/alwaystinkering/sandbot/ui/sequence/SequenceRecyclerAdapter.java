@@ -3,13 +3,12 @@ package com.alwaystinkering.sandbot.ui.sequence;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,54 +26,66 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SequenceListAdapter extends ArrayAdapter<Sequence> {
+public class SequenceRecyclerAdapter extends RecyclerView.Adapter<SequenceRecyclerAdapter.ViewHolder> {
 
-    private static final String TAG = "SequenceListAdapter";
+    private static final String TAG = "SequenceRecyclerAdapter";
 
     private MainActivity context;
+    private List<Sequence> sequences;
 
-    static class ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public ImageView icon;
         public TextView name;
-        public ImageView run;
         public ImageView runAtStartup;
+        public ImageView run;
         public ImageView edit;
         public ImageView delete;
+        public View layout;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            layout = itemView;
+            icon = itemView.findViewById(R.id.sequenceIcon);
+            name = itemView.findViewById(R.id.sequenceName);
+            runAtStartup = itemView.findViewById(R.id.sequenceAutoRun);
+            run = itemView.findViewById(R.id.sequenceRun);
+            edit = itemView.findViewById(R.id.sequenceEdit);
+            delete = itemView.findViewById(R.id.sequenceDelete);
+
+        }
     }
 
-    public SequenceListAdapter(@NonNull MainActivity context, int resource, @NonNull List<Sequence> objects) {
-        super(context, resource, objects);
-        this.context = context;
+    public SequenceRecyclerAdapter(MainActivity activity, List<Sequence> sequences) {
+        this.context = activity;
+        this.sequences = sequences;
+    }
+
+    public void add(int position, Sequence item) {
+        sequences.add(position, item);
+        notifyItemInserted(position);
+    }
+
+    public void remove(int position) {
+        sequences.remove(position);
+        notifyItemRemoved(position);
     }
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable final View convertView, @NonNull final ViewGroup parent) {
-        View rowView = convertView;
-        // reuse views
-        if (rowView == null) {
-            LayoutInflater inflater = context.getLayoutInflater();
-            rowView = inflater.inflate(R.layout.list_item_sequence, null);
-            // configure view holder
-            ViewHolder viewHolder = new ViewHolder();
-            viewHolder.name = rowView.findViewById(R.id.sequenceTitle);
-            viewHolder.runAtStartup = rowView.findViewById(R.id.sequenceAutoRun);
-            viewHolder.run = rowView.findViewById(R.id.sequenceRun);
-            viewHolder.edit = rowView.findViewById(R.id.sequenceEdit);
-            viewHolder.delete = rowView.findViewById(R.id.sequenceDelete);
-            rowView.setTag(viewHolder);
-        }
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View view = inflater.inflate(R.layout.card_sequence, parent, false);
+        return new ViewHolder(view);
+    }
 
-        // fill data
-        ViewHolder holder = (ViewHolder) rowView.getTag();
-        final Sequence sequence = getItem(position);
-        if (sequence == null) {
-            return null;
-        }
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        final Sequence sequence = sequences.get(position);
         holder.name.setText(sequence.getName());
         if (sequence.isAutoRun()) {
-            holder.runAtStartup.setColorFilter(context.getResources().getColor(R.color.nav));
+            holder.runAtStartup.setColorFilter(context.getResources().getColor(R.color.green_selected));
         } else {
-            holder.runAtStartup.setColorFilter(context.getResources().getColor(R.color.dark_gray));
+            holder.runAtStartup.setColorFilter(context.getResources().getColor(R.color.light_gray));
         }
         holder.runAtStartup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,8 +159,10 @@ public class SequenceListAdapter extends ArrayAdapter<Sequence> {
                         }).show();
             }
         });
+    }
 
-
-        return rowView;
+    @Override
+    public int getItemCount() {
+        return sequences.size();
     }
 }

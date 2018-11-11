@@ -3,13 +3,12 @@ package com.alwaystinkering.sandbot.ui.pattern;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,47 +26,59 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PatternListAdapter extends ArrayAdapter<Pattern> {
+public class PatternRecyclerAdapter extends RecyclerView.Adapter<PatternRecyclerAdapter.ViewHolder> {
 
-    private static final String TAG = "PatternListAdapter";
+    private static final String TAG = "PatternRecyclerAdapter";
 
     private MainActivity context;
+    private List<Pattern> patterns;
 
-    static class ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public ImageView icon;
         public TextView name;
         public ImageView run;
         public ImageView edit;
         public ImageView delete;
+        public View layout;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            layout = itemView;
+            icon = itemView.findViewById(R.id.patternIcon);
+            name = itemView.findViewById(R.id.patternName);
+            run = itemView.findViewById(R.id.patternRun);
+            edit = itemView.findViewById(R.id.patternEdit);
+            delete = itemView.findViewById(R.id.patternDelete);
+
+        }
     }
 
-    public PatternListAdapter(@NonNull MainActivity context, int resource, @NonNull List<Pattern> objects) {
-        super(context, resource, objects);
-        this.context = context;
+    public PatternRecyclerAdapter(MainActivity activity, List<Pattern> patterns) {
+        this.context = activity;
+        this.patterns = patterns;
+    }
+
+    public void add(int position, Pattern item) {
+        patterns.add(position, item);
+        notifyItemInserted(position);
+    }
+
+    public void remove(int position) {
+        patterns.remove(position);
+        notifyItemRemoved(position);
     }
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull final ViewGroup parent) {
-        View rowView = convertView;
-        // reuse views
-        if (rowView == null) {
-            LayoutInflater inflater = context.getLayoutInflater();
-            rowView = inflater.inflate(R.layout.list_item_pattern, null);
-            // configure view holder
-            ViewHolder viewHolder = new ViewHolder();
-            viewHolder.name = rowView.findViewById(R.id.patternTitle);
-            viewHolder.run = rowView.findViewById(R.id.patternRun);
-            viewHolder.edit = rowView.findViewById(R.id.patternEdit);
-            viewHolder.delete = rowView.findViewById(R.id.patternDelete);
-            rowView.setTag(viewHolder);
-        }
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View view = inflater.inflate(R.layout.card_pattern, parent, false);
+        return new ViewHolder(view);
+    }
 
-        // fill data
-        ViewHolder holder = (ViewHolder) rowView.getTag();
-        final Pattern pattern = getItem(position);
-        if (pattern == null) {
-            return null;
-        }
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        final Pattern pattern = patterns.get(position);
         holder.name.setText(pattern.getName());
         holder.run.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,8 +130,10 @@ public class PatternListAdapter extends ArrayAdapter<Pattern> {
                         }).show();
             }
         });
+    }
 
-
-        return rowView;
+    @Override
+    public int getItemCount() {
+        return patterns.size();
     }
 }
