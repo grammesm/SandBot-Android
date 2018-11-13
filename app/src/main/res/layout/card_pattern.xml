@@ -48,24 +48,24 @@
 
             <ImageView
                 android:id="@+id/patternRun"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:src="@drawable/play_circle_outline" />
 
             <ImageView
                 android:id="@+id/patternEdit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:src="@drawable/circle_edit_outline" />
 
             <ImageView
                 android:id="@+id/patternDelete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@drawable/delete_circle_outline" />
 
 

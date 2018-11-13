@@ -131,7 +131,7 @@ public class PatternSimulationDialog {
                 stop = pattern.isStopped();//count >= 2000;//t >= 30;
 
                 try {
-                    Thread.sleep(3);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

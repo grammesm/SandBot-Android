@@ -5,7 +5,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -31,9 +30,15 @@ public interface SandBotInterface {
     @GET("/getsettings")
     Call<ResponseBody> getSettings();
 
+    @GET("/status")
+    Call<ResponseBody> getStatus();
+
 
     //@Headers({"Content-Type: application/json"})
     @POST("/postsettings")
     Call<ResponseBody> postSettings(@Body RequestBody json);
+
+    @POST("/setled")
+    Call<ResponseBody> setLed(@Body RequestBody json);
 
 }

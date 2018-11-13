@@ -21,16 +21,16 @@
             android:id="@+id/simPlay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/play"/>
+            android:src="@drawable/play_dark"/>
         <ImageButton
             android:id="@+id/simPause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/pause"/>
+            android:src="@drawable/pause_dark"/>
         <ImageButton
             android:id="@+id/simStop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/stop"/>
+            android:src="@drawable/stop_dark"/>
     </LinearLayout>
 </RelativeLayout>

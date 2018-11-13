@@ -78,6 +78,7 @@ public class PatternFragment extends SandBotTab {
     @Override
     void enable() {
         newPattern.setEnabled(true);
+        refresh();
     }
 
     @Override

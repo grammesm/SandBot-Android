@@ -35,10 +35,6 @@ public class SandBotSettings {
     private Map<String, Sequence> sequences = new HashMap<>();
     private String startup;
 
-    private int ledBrightness;
-    private boolean ledAutoDim;
-    private int speed;
-
     public Integer getMaxCfgLen() {
         return maxCfgLen;
     }
@@ -155,30 +151,6 @@ public class SandBotSettings {
                 listener.writeConfigResult(false);
             }
         });
-    }
-
-    public int getLedBrightness() {
-        return ledBrightness;
-    }
-
-    public void setLedBrightness(int ledBrightness) {
-        this.ledBrightness = ledBrightness;
-    }
-
-    public boolean isLedAutoDim() {
-        return ledAutoDim;
-    }
-
-    public void setLedAutoDim(boolean ledAutoDim) {
-        this.ledAutoDim = ledAutoDim;
-    }
-
-    public int getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
     }
 
     public String toJson() {

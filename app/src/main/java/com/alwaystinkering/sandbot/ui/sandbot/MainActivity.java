@@ -34,6 +34,10 @@ public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
 
+    private Thread statusThread;
+    private boolean statusRunning = false;
+
+
     private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
@@ -64,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         commsError = findViewById(R.id.commsError);
+        commsError.setVisibility(View.VISIBLE);
+        commsError.setText("Communicating...");
+        commsError.setBackgroundColor(getResources().getColor(R.color.nav));
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
@@ -104,12 +111,35 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void showCommsError() {
+        commsError.setVisibility(View.VISIBLE);
+        commsError.setBackgroundColor(getResources().getColor(R.color.red_error));
+        commsError.setText("Error Communicating with Sand Bot");
+    }
+
     @Override
     public void onStart() {
         super.onStart();
         SandBotStateManager.getSandBotSettings().clear();
         sectionsPagerAdapter.disable();
         getSettings();
+
+        // Start status
+        if (statusThread == null) {
+            statusThread = new Thread(statusRunnable);
+            statusThread.start();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        if (statusThread != null) {
+            statusRunning = false;
+            statusThread = null;
+        }
+
     }
 
     @Override
@@ -147,7 +177,6 @@ public class MainActivity extends AppCompatActivity {
                     SandBotStateManager.getSandBotSettings().parse(json);
                     Log.d(TAG, "onResponse : " + SandBotStateManager.getSandBotSettings().toJson());
                     sectionsPagerAdapter.enable();
-                    sectionsPagerAdapter.refresh();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -155,11 +184,55 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                commsError.setVisibility(View.VISIBLE);
+                showCommsError();
                 SandBotStateManager.getSandBotSettings().clear();
                 Log.e(TAG, "onFailure: " + t.getLocalizedMessage());
                 sectionsPagerAdapter.disable();
             }
         });
     }
+
+    public void refresh() {
+        sectionsPagerAdapter.refresh();
+    }
+
+    private Runnable statusRunnable = new Runnable() {
+        @Override
+        public void run() {
+            statusRunning = true;
+
+            while (statusRunning) {
+                Call<ResponseBody> call = SandBotWeb.getInterface().getStatus();
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        commsError.setVisibility(View.GONE);
+                        String json = null;
+                        try {
+                            json = response.body().string();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d(TAG, "Status JSON: " + json);
+                        SandBotStateManager.getSandBotStatus().parse(json);
+                        sectionsPagerAdapter.enable();
+                        refresh();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        showCommsError();
+                        sectionsPagerAdapter.disable();
+                    }
+                });
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            Log.d(TAG, "Status Thread stopped");
+        }
+    };
 }

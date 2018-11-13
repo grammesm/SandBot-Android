@@ -4,10 +4,12 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.alwaystinkering.sandbot.R;
 import com.alwaystinkering.sandbot.model.pattern.Coordinate;
 
 import java.util.List;
@@ -18,14 +20,21 @@ public class SimulatedSandView extends View {
     private static final String TAG = "";
 
     private Paint linePaint;
+    private Paint circlePaint;
     private int viewRadius;
     private int tableRadius = 200; //table radius in mm
+
+    private Drawable ballImage;
 
     private List<Coordinate> coordinates = new CopyOnWriteArrayList<>();
 
     public SimulatedSandView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         linePaint = new Paint();
+        circlePaint = new Paint();
+        circlePaint.setStrokeWidth(2);
+        circlePaint.setColor(Color.BLACK);
+        ballImage = context.getResources().getDrawable(R.drawable.steel_ball);
     }
 
     public void initTableRadius(int tableRadius) {
@@ -72,6 +81,8 @@ public class SimulatedSandView extends View {
             lastX = x;
             lastY = y;
         }
+
+        canvas.drawCircle(lastX, lastY, 20, circlePaint);
     }
 
     private float translateTablePointToView(float point) {

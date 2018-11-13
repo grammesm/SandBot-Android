@@ -60,6 +60,7 @@ public class SequenceFragment extends SandBotTab {
     @Override
     void enable() {
         newSequence.setEnabled(true);
+        refresh();
     }
 
     @Override

@@ -9,11 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.Switch;
 
 import com.alwaystinkering.sandbot.R;
 import com.alwaystinkering.sandbot.model.state.SandBotStateManager;
 import com.alwaystinkering.sandbot.model.web.Result;
-import com.alwaystinkering.sandbot.model.web.SandBotSettings;
+import com.alwaystinkering.sandbot.model.web.SandBotStatus;
 import com.alwaystinkering.sandbot.model.web.SandBotWeb;
 
 import retrofit2.Call;
@@ -26,6 +27,7 @@ public class BotFragment extends SandBotTab {
 
     private View rootView;
 
+    private Switch ledSwitch;
     private SeekBar ledBrightness;
     private ImageView manualBrightness;
     private ImageView autoBrightness;
@@ -44,7 +46,9 @@ public class BotFragment extends SandBotTab {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_bot, container, false);
 
+        ledSwitch = rootView.findViewById(R.id.ledSwitch);
         ledBrightness = rootView.findViewById(R.id.ledBrightnessSeekBar);
+        ledBrightness.setMax(127);
         manualBrightness = rootView.findViewById(R.id.ledManualBrightness);
         autoBrightness = rootView.findViewById(R.id.ledAutoBrightness);
         speed = rootView.findViewById(R.id.speedSeekBar);
@@ -52,6 +56,33 @@ public class BotFragment extends SandBotTab {
         pause = rootView.findViewById(R.id.botPause);
         stop = rootView.findViewById(R.id.botStop);
         home = rootView.findViewById(R.id.botHome);
+
+        ledSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ledSwitch.isChecked()) {
+                    ledBrightness.setEnabled(true);
+                    manualBrightness.setEnabled(true);
+                    autoBrightness.setEnabled(true);
+                    SandBotStateManager.getSandBotStatus().setLedOn(true);
+                } else {
+                    ledBrightness.setEnabled(false);
+                    manualBrightness.setEnabled(false);
+                    autoBrightness.setEnabled(false);
+                    SandBotStateManager.getSandBotStatus().setLedOn(false);
+                }
+                SandBotStateManager.getSandBotStatus().writeLedConfig(new SandBotStatus.ConfigWriteListener() {
+                    @Override
+                    public void writeConfigResult(boolean success) {
+                        if (success) {
+                            refresh();
+                        }
+                    }
+                });
+
+            }
+        });
+        ledSwitch.setChecked(SandBotStateManager.getSandBotStatus().isLedOn());
 
         home.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,8 +172,8 @@ public class BotFragment extends SandBotTab {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                SandBotStateManager.getSandBotSettings().setLedBrightness(ledBrightness.getProgress());
-                SandBotStateManager.getSandBotSettings().writeConfig(new SandBotSettings.ConfigWriteListener() {
+                SandBotStateManager.getSandBotStatus().setLedBrightness(ledBrightness.getProgress() + 128);
+                SandBotStateManager.getSandBotStatus().writeLedConfig(new SandBotStatus.ConfigWriteListener() {
                     @Override
                     public void writeConfigResult(boolean success) {
                         if (success) {
@@ -165,8 +196,8 @@ public class BotFragment extends SandBotTab {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                SandBotStateManager.getSandBotSettings().setSpeed(speed.getProgress());
-                SandBotStateManager.getSandBotSettings().writeConfig(new SandBotSettings.ConfigWriteListener() {
+                SandBotStateManager.getSandBotStatus().setSpeed(speed.getProgress());
+                SandBotStateManager.getSandBotStatus().writeLedConfig(new SandBotStatus.ConfigWriteListener() {
                     @Override
                     public void writeConfigResult(boolean success) {
                         if (success) {
@@ -181,12 +212,11 @@ public class BotFragment extends SandBotTab {
         manualBrightness.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SandBotStateManager.getSandBotSettings().setLedAutoDim(false);
-                SandBotStateManager.getSandBotSettings().writeConfig(new SandBotSettings.ConfigWriteListener() {
+                SandBotStateManager.getSandBotStatus().setLedAutoDim(false);
+                SandBotStateManager.getSandBotStatus().writeLedConfig(new SandBotStatus.ConfigWriteListener() {
                     @Override
                     public void writeConfigResult(boolean success) {
                         if (success) {
-                            Snackbar.make(rootView, "Manual Brightness Enabled", Snackbar.LENGTH_SHORT).show();
                             refresh();
                         }
                     }
@@ -196,12 +226,11 @@ public class BotFragment extends SandBotTab {
         autoBrightness.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SandBotStateManager.getSandBotSettings().setLedAutoDim(true);
-                SandBotStateManager.getSandBotSettings().writeConfig(new SandBotSettings.ConfigWriteListener() {
+                SandBotStateManager.getSandBotStatus().setLedAutoDim(true);
+                SandBotStateManager.getSandBotStatus().writeLedConfig(new SandBotStatus.ConfigWriteListener() {
                     @Override
                     public void writeConfigResult(boolean success) {
                         if (success) {
-                            Snackbar.make(rootView, "Auto Brightness Enabled", Snackbar.LENGTH_SHORT).show();
                             refresh();
                         }
                     }
@@ -214,8 +243,9 @@ public class BotFragment extends SandBotTab {
 
     @Override
     void refresh() {
-        ledBrightness.setProgress(SandBotStateManager.getSandBotSettings().getLedBrightness());
-        if (SandBotStateManager.getSandBotSettings().isLedAutoDim()) {
+        ledSwitch.setChecked(SandBotStateManager.getSandBotStatus().isLedOn());
+        ledBrightness.setProgress(SandBotStateManager.getSandBotStatus().getLedBrightness() - 128);
+        if (SandBotStateManager.getSandBotStatus().isLedAutoDim()) {
             autoBrightness.setColorFilter(getResources().getColor(R.color.green_selected));
             manualBrightness.setColorFilter(getResources().getColor(R.color.light_gray));
             ledBrightness.setEnabled(false);
@@ -229,22 +259,28 @@ public class BotFragment extends SandBotTab {
     @Override
     void enable() {
         Log.d(TAG, "Enable");
-        ledBrightness.setEnabled(!SandBotStateManager.getSandBotSettings().isLedAutoDim());
+        ledSwitch.setEnabled(true);
+        ledBrightness.setEnabled(!SandBotStateManager.getSandBotStatus().isLedAutoDim());
         speed.setEnabled(true);
         play.setEnabled(true);
         pause.setEnabled(true);
         stop.setEnabled(true);
         home.setEnabled(true);
+        refresh();
     }
 
     @Override
     void disable() {
         Log.d(TAG, "Disable");
+        ledSwitch.setEnabled(false);
         ledBrightness.setEnabled(false);
         speed.setEnabled(false);
         play.setEnabled(false);
         pause.setEnabled(false);
         stop.setEnabled(false);
         home.setEnabled(false);
+        autoBrightness.setColorFilter(getResources().getColor(R.color.light_gray));
+        manualBrightness.setColorFilter(getResources().getColor(R.color.light_gray));
+
     }
 }

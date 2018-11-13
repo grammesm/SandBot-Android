@@ -46,8 +46,8 @@
             android:padding="8dp">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@drawable/walk" />
 
             <SeekBar
@@ -57,8 +57,8 @@
                 android:layout_weight="0.74" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@drawable/run" />
         </LinearLayout>
     </LinearLayout>

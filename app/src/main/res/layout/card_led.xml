@@ -45,6 +45,12 @@
             android:orientation="horizontal"
             android:padding="8dp">
 
+            <Switch
+                android:id="@+id/ledSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingBottom="0dp"
+                android:paddingTop="0dp"/>
             <SeekBar
                 android:id="@+id/ledBrightnessSeekBar"
                 android:layout_width="0dip"
@@ -53,16 +59,16 @@
 
             <ImageView
                 android:id="@+id/ledManualBrightness"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="4dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="4dp"
                 android:src="@drawable/brightness_6" />
 
             <ImageView
                 android:id="@+id/ledAutoBrightness"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="4dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="4dp"
                 android:src="@drawable/brightness_auto" />
         </LinearLayout>
     </LinearLayout>
