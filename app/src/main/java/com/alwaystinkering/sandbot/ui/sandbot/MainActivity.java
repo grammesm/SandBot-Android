@@ -132,8 +132,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
 
         if (statusThread != null) {
             statusRunning = false;

@@ -83,6 +83,8 @@ public class Pattern {
     }
 
     public boolean isStopped() {
+        Log.d(TAG, "Evaluating: " + stopExpression.toString());
+        Log.d(TAG, "Values: " + runningParamToValue.toString());
         return stopExpression.evaluate(runningParamToValue);
     }
 

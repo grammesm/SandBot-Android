@@ -26,20 +26,20 @@ public class BooleanExpression {
             String left = op[0];
             String oper = op[1];
             String right = op[2];
-//            Log.d(TAG, "LEFT: " + left + ", Operand: " + oper + ", RIGHT: " + right);
+            //Log.d(TAG, "LEFT: " + left + ", Operand: " + oper + ", RIGHT: " + right);
 
             Comparison.Operator operator = Comparison.Operator.fromString(oper);
 
             if (operator != Comparison.Operator.UNDEFINED) {
                 if (operator == Comparison.Operator.AND || operator == Comparison.Operator.OR) {
-//                    Log.d(TAG, "LOGIC");
+                    //Log.d(TAG, "LOGIC");
                     if (operator == Comparison.Operator.AND) {
                         return new BooleanExpression(left).evaluate(vars) && new BooleanExpression(right).evaluate(vars);
                     } else {
                         return new BooleanExpression(left).evaluate(vars) || new BooleanExpression(right).evaluate(vars);
                     }
                 } else {
-//                    Log.d(TAG, "EVALUATE");
+                    //Log.d(TAG, "EVALUATE");
                     Expression leftExpression = new ExpressionBuilder(left).variables(vars.keySet()).build();
                     Expression rightExpression = new ExpressionBuilder(right).variables(vars.keySet()).build();
                     eval = new Comparison(leftExpression, operator, rightExpression).evaluate(vars);
@@ -61,7 +61,7 @@ public class BooleanExpression {
         char[] expressionArray = expression.toCharArray();
 
 
-//        Log.d(TAG, "Looking for outer comparison: " + expression);
+        //Log.d(TAG, "Looking for outer comparison: " + expression);
 
 
         for (int pos = 0; pos < expression.length(); pos++) {
@@ -83,14 +83,14 @@ public class BooleanExpression {
 
                     // Boolean operator!
                     if (isBoolOperator(expression.substring(pos, pos + opLength))) {
-//                        Log.d(TAG, "Boolean! Left: " + expression.substring(0, pos).trim()
-//                                + " Operator: " + expression.substring(pos, pos + 2).trim()
-//                                + ", Right: " + expression.substring(pos + 2, expression.length()).trim());
+                        //Log.d(TAG, "Boolean! Left: " + expression.substring(0, pos).trim()
+                        //        + " Operator: " + expression.substring(pos, pos + opLength).trim()
+                        //        + ", Right: " + expression.substring(pos + opLength, expression.length()).trim());
 
                         return new String[]{
                                 expression.substring(0, pos).trim(),
-                                expression.substring(pos, pos + 2).trim(),
-                                expression.substring(pos + 2, expression.length()).trim()
+                                expression.substring(pos, pos + opLength).trim(),
+                                expression.substring(pos + opLength, expression.length()).trim()
                         };
                     }
                 }
@@ -119,5 +119,10 @@ public class BooleanExpression {
     private boolean isBoolOperator(String s) {
         //Log.d(TAG, "Testing [" + s + "] for boolean operator");
         return Comparison.Operator.fromString(s) != Comparison.Operator.UNDEFINED;
+    }
+
+    @Override
+    public String toString() {
+        return expression;
     }
 }

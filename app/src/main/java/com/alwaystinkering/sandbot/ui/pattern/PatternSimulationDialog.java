@@ -90,6 +90,8 @@ public class PatternSimulationDialog {
     }
 
     private void startSim() {
+        Log.d(TAG, "Starting Sim of patter: " + pattern.getName());
+        Log.d(TAG, "Pattern Expressions: " + pattern.getExpressionString());
         playButton.setEnabled(false);
         pauseButton.setEnabled(true);
         stopButton.setEnabled(true);
@@ -131,7 +133,7 @@ public class PatternSimulationDialog {
                 stop = pattern.isStopped();//count >= 2000;//t >= 30;
 
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(5);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

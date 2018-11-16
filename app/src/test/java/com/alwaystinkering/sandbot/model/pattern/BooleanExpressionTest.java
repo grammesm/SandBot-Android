@@ -36,6 +36,15 @@ public class BooleanExpressionTest extends TestCase {
     }
 
     @Test
+    public void testSimpleEqualsEvaluate1() {
+        formula = "t > 100";
+        vars.put("t", 100.2D);
+        expression = new BooleanExpression(formula);
+        assertTrue(expression.evaluate(vars));
+
+    }
+
+    @Test
     public void testSimpleEqualsEvaluate2() {
         formula = "x + y == z - y";
         vars.put("x", 6.2D);
@@ -108,6 +117,32 @@ public class BooleanExpressionTest extends TestCase {
         expression = new BooleanExpression(formula);
         assertTrue(expression.evaluate(vars));
 
+    }
+
+    @Test
+    public void testMultVars() {
+        formula = "(t>20)";
+        vars.put("p", 80.0);
+        vars.put("r", 80.0);
+        vars.put("t", 26.460000000001337);
+        vars.put("w", 3.0);
+        vars.put("x", 95.75688291834061);
+        vars.put("y", 98.12805182864165);
+        expression = new BooleanExpression(formula);
+        assertTrue(expression.evaluate(vars));
+    }
+
+    @Test
+    public void testMultVars2() {
+        formula = "(t==20)";
+        vars.put("p", 80.0);
+        vars.put("r", 80.0);
+        vars.put("t", 20.0);
+        vars.put("w", 3.0);
+        vars.put("x", 95.75688291834061);
+        vars.put("y", 98.12805182864165);
+        expression = new BooleanExpression(formula);
+        assertTrue(expression.evaluate(vars));
     }
 
 

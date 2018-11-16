@@ -48,7 +48,7 @@ public class BotFragment extends SandBotTab {
 
         ledSwitch = rootView.findViewById(R.id.ledSwitch);
         ledBrightness = rootView.findViewById(R.id.ledBrightnessSeekBar);
-        ledBrightness.setMax(127);
+        ledBrightness.setMax(255);
         manualBrightness = rootView.findViewById(R.id.ledManualBrightness);
         autoBrightness = rootView.findViewById(R.id.ledAutoBrightness);
         speed = rootView.findViewById(R.id.speedSeekBar);
@@ -163,6 +163,15 @@ public class BotFragment extends SandBotTab {
         ledBrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                SandBotStateManager.getSandBotStatus().setLedBrightness(ledBrightness.getProgress());
+                SandBotStateManager.getSandBotStatus().writeLedConfig(new SandBotStatus.ConfigWriteListener() {
+                    @Override
+                    public void writeConfigResult(boolean success) {
+                        if (success) {
+                            refresh();
+                        }
+                    }
+                });
             }
 
             @Override
@@ -172,15 +181,6 @@ public class BotFragment extends SandBotTab {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                SandBotStateManager.getSandBotStatus().setLedBrightness(ledBrightness.getProgress() + 128);
-                SandBotStateManager.getSandBotStatus().writeLedConfig(new SandBotStatus.ConfigWriteListener() {
-                    @Override
-                    public void writeConfigResult(boolean success) {
-                        if (success) {
-                            refresh();
-                        }
-                    }
-                });
             }
         });
 
@@ -244,7 +244,7 @@ public class BotFragment extends SandBotTab {
     @Override
     void refresh() {
         ledSwitch.setChecked(SandBotStateManager.getSandBotStatus().isLedOn());
-        ledBrightness.setProgress(SandBotStateManager.getSandBotStatus().getLedBrightness() - 128);
+        ledBrightness.setProgress(SandBotStateManager.getSandBotStatus().getLedBrightness());
         if (SandBotStateManager.getSandBotStatus().isLedAutoDim()) {
             autoBrightness.setColorFilter(getResources().getColor(R.color.green_selected));
             manualBrightness.setColorFilter(getResources().getColor(R.color.light_gray));
