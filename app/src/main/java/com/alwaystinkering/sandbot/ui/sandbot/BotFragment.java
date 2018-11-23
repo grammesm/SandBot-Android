@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.alwaystinkering.sandbot.R;
 import com.alwaystinkering.sandbot.model.state.SandBotStateManager;
@@ -32,6 +33,8 @@ public class BotFragment extends SandBotTab {
     private ImageView manualBrightness;
     private ImageView autoBrightness;
     private SeekBar speed;
+    private TextView state;
+    private TextView numOps;
 
     private FloatingActionButton play;
     private FloatingActionButton pause;
@@ -52,6 +55,9 @@ public class BotFragment extends SandBotTab {
         manualBrightness = rootView.findViewById(R.id.ledManualBrightness);
         autoBrightness = rootView.findViewById(R.id.ledAutoBrightness);
         speed = rootView.findViewById(R.id.speedSeekBar);
+        state = rootView.findViewById(R.id.status_state_text);
+        numOps = rootView.findViewById(R.id.status_num_ops);
+
         play = rootView.findViewById(R.id.botPlay);
         pause = rootView.findViewById(R.id.botPause);
         stop = rootView.findViewById(R.id.botStop);
@@ -253,6 +259,14 @@ public class BotFragment extends SandBotTab {
             autoBrightness.setColorFilter(getResources().getColor(R.color.light_gray));
             manualBrightness.setColorFilter(getResources().getColor(R.color.green_selected));
             ledBrightness.setEnabled(true);
+        }
+        numOps.setText(String.valueOf(SandBotStateManager.getSandBotStatus().getQd()));
+        if (SandBotStateManager.getSandBotStatus().getQd() > 0) {
+            state.setText("Running");
+            state.setBackgroundColor(getResources().getColor(R.color.green_running));
+        } else {
+            state.setText("Idle");
+            state.setBackgroundColor(getResources().getColor(R.color.orange_idle));
         }
     }
 

@@ -16,5 +16,7 @@
     <color name="dark_gray">#333333</color>
     <color name="black">#000000</color>
     <color name="light_gray">#999999</color>
+    <color name="orange_idle">#ffa726</color>
+    <color name="green_running">#66bb6a</color>
 
 </resources>

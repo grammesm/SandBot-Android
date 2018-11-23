@@ -39,6 +39,13 @@
         layout="@layout/card_speed"
         android:layout_below="@id/led_card" />
 
+    <include
+        android:id="@+id/status_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/card_status"
+        android:layout_below="@id/speed_card" />
+
 
     <LinearLayout
         android:layout_width="match_parent"

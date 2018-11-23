@@ -27,7 +27,15 @@ public class SandBotStatus {
     private int ledBrightness;
     private boolean ledAutoDim;
     private int speed;
+    private int Qd;
 
+    public int getQd() {
+        return Qd;
+    }
+
+    public void setQd(int qd) {
+        Qd = qd;
+    }
 
     public int getLedBrightness() {
         return ledBrightness;
@@ -98,6 +106,7 @@ public class SandBotStatus {
             setLedOn(rootObj.getAsJsonPrimitive("ledOn").getAsInt() == 1);
             setLedBrightness(rootObj.getAsJsonPrimitive("ledValue").getAsInt());
             setLedAutoDim(rootObj.getAsJsonPrimitive("autoDim").getAsInt() == 1);
+            setQd(rootObj.getAsJsonPrimitive("Qd").getAsInt());
         } catch (Exception e) {
             e.printStackTrace();
         }

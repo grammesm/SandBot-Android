@@ -83,7 +83,7 @@ public class PatternFragment extends SandBotTab {
 
     @Override
     void disable() {
-        newPattern.setEnabled(false);
+        //newPattern.setEnabled(false);
         patternList.setAdapter(null);
     }
 }
