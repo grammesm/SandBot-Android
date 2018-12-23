@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.alwaystinkering.sandbot.R;
-import com.alwaystinkering.sandbot.model.state.SandBotStateManager;
+import com.alwaystinkering.sandbot.model.state.FileManager;
 import com.alwaystinkering.sandbot.ui.pattern.PatternEditActivity;
 import com.alwaystinkering.sandbot.ui.pattern.PatternRecyclerAdapter;
 
@@ -32,7 +32,7 @@ public class PatternFragment extends SandBotTab {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_pattern, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_file, container, false);
         patternList = rootView.findViewById(R.id.sandPatternList);
         patternListLayoutManager = new LinearLayoutManager(getActivity());
         patternList.setLayoutManager(patternListLayoutManager);
@@ -71,7 +71,7 @@ public class PatternFragment extends SandBotTab {
     void refresh() {
         patternListAdapter =
                 new PatternRecyclerAdapter((MainActivity) getActivity(),
-                        new ArrayList<>(SandBotStateManager.getSandBotSettings().getPatterns().values()));
+                        new ArrayList<>(FileManager.getFilesMap().values()));
         patternList.setAdapter(patternListAdapter);
     }
 

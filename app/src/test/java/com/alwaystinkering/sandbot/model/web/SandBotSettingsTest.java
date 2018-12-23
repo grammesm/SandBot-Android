@@ -1,6 +1,6 @@
 package com.alwaystinkering.sandbot.model.web;
 
-import com.alwaystinkering.sandbot.model.pattern.Pattern;
+import com.alwaystinkering.sandbot.model.pattern.ParametricPattern;
 
 import junit.framework.TestCase;
 
@@ -9,7 +9,7 @@ import org.junit.Test;
 public class SandBotSettingsTest extends TestCase {
 
     private SandBotSettings sandBotSettings;
-    private Pattern pattern = new Pattern("myPattern", "x = 0", "x = sin(x);\ny = cos(x)\n");
+    private ParametricPattern parametricPattern = new ParametricPattern("myPattern", "x = 0", "x = sin(x);\ny = cos(x)\n");
 
     @Override
     public void setUp() throws Exception {
@@ -22,7 +22,7 @@ public class SandBotSettingsTest extends TestCase {
 
     @Test
     public void testToJson() {
-        sandBotSettings.getPatterns().put(pattern.getName(), pattern);
+        sandBotSettings.getPatterns().put(parametricPattern.getName(), parametricPattern);
         System.out.println(sandBotSettings.toJson());
         assertTrue(true);
     }

@@ -78,6 +78,7 @@ public class SandBotStatus {
         RequestBody body =
                 RequestBody.create(MediaType.parse("text/plain"), json);
         Call<ResponseBody> write = SandBotWeb.getInterface().setLed(body);
+        Log.d(TAG, "Writing json: " + json);
         write.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

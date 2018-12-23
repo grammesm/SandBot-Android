@@ -1,11 +1,15 @@
 package com.alwaystinkering.sandbot.ui.sandbot;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +21,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.alwaystinkering.sandbot.R;
+import com.alwaystinkering.sandbot.model.state.FileManager;
 import com.alwaystinkering.sandbot.model.state.SandBotStateManager;
+import com.alwaystinkering.sandbot.model.web.FileListResult;
+import com.alwaystinkering.sandbot.model.web.SandBotFile;
 import com.alwaystinkering.sandbot.model.web.SandBotWeb;
 import com.alwaystinkering.sandbot.ui.settings.SettingsActivity;
 
@@ -37,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private Thread statusThread;
     private boolean statusRunning = false;
 
+    private boolean test = true;
+
 
     private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
@@ -55,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private TextView commsError;
+    private TextView testMode;
     private TabPagerAdapter sectionsPagerAdapter;
     private ViewPager viewPager;
 
@@ -68,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         commsError = findViewById(R.id.commsError);
+        testMode = findViewById(R.id.testMode);
+
         commsError.setVisibility(View.VISIBLE);
         commsError.setText("Communicating...");
         commsError.setBackgroundColor(getResources().getColor(R.color.nav));
@@ -122,12 +134,47 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         SandBotStateManager.getSandBotSettings().clear();
         sectionsPagerAdapter.disable();
-        getSettings();
+        //getSettings();
+        //getFiles();
 
-        // Start status
-        if (statusThread == null) {
-            statusThread = new Thread(statusRunnable);
-            statusThread.start();
+//        // Start status
+//        if (statusThread == null) {
+//            statusThread = new Thread(statusRunnable);
+//            statusThread.start();
+//        }
+
+        if (test) {
+            testMode.setVisibility(View.VISIBLE);
+            int permissionCheck1 = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+            if (permissionCheck1 != PackageManager.PERMISSION_GRANTED ) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_EXTERNAL_STORAGE},
+                        33);
+            } else {
+                FileManager.initializeTestFiles(new FileManager.FileManagerListener() {
+                    @Override
+                    public void listUpdated() {
+                        refresh();
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == 33) {
+            if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                FileManager.initializeTestFiles(new FileManager.FileManagerListener() {
+                    @Override
+                    public void listUpdated() {
+                        refresh();
+                    }
+                });
+            }
         }
     }
 
@@ -161,6 +208,30 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void getFiles() {
+        Log.d(TAG, "Get Files");
+        Call<FileListResult> call = SandBotWeb.getInterface().listFiles();
+        call.enqueue(new Callback<FileListResult>() {
+            @Override
+            public void onResponse(Call<FileListResult> call, Response<FileListResult> response) {
+                FileListResult result = response.body();
+                if (result != null) {
+                    Log.d(TAG, result.toString());
+                    FileManager.setFileSystemName(result.getFsName());
+                    for (SandBotFile f : response.body().getSandBotFiles()) {
+                        FileManager.createPatternFromFile(f);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FileListResult> call, Throwable t) {
+                showCommsError();
+                Log.e(TAG, "SandBotFile List Fail");
+            }
+        });
     }
 
     public void getSettings() {

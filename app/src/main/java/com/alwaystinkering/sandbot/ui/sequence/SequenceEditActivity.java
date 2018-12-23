@@ -9,14 +9,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.alwaystinkering.sandbot.R;
-import com.alwaystinkering.sandbot.model.pattern.Pattern;
 import com.alwaystinkering.sandbot.model.sequence.Sequence;
 import com.alwaystinkering.sandbot.model.state.SandBotStateManager;
 import com.alwaystinkering.sandbot.model.web.SandBotSettings;
-import com.alwaystinkering.sandbot.ui.pattern.PatternSimulationDialog;
 
 
 public class SequenceEditActivity extends AppCompatActivity {
@@ -40,7 +37,7 @@ public class SequenceEditActivity extends AppCompatActivity {
             Log.d(TAG, "Extras supplied");
             originalName = getIntent().getStringExtra(Sequence.SEQUENCE_NAME_EXTRA_KEY);
             if (originalName != null) {
-                sequence = SandBotStateManager.getSandBotSettings().getSequences().get(originalName);
+                //sequence = SandBotStateManager.getSandBotSettings().getSequences().get(originalName);
             } else {
                 Log.d(TAG, "Sequence name not found!");
                 sequence = new Sequence("", "", false);
@@ -123,11 +120,11 @@ public class SequenceEditActivity extends AppCompatActivity {
 
         // Remove the old pattern if it exists
         if (originalName != null) {
-            SandBotStateManager.getSandBotSettings().getSequences().remove(originalName);
+            //SandBotStateManager.getSandBotSettings().getSequences().remove(originalName);
         }
 
         // Save the newly created/edited pattern
-        SandBotStateManager.getSandBotSettings().getSequences().put(sequence.getName(), sequence);
+        //SandBotStateManager.getSandBotSettings().getSequences().put(sequence.getName(), sequence);
         SandBotStateManager.getSandBotSettings().writeConfig(new SandBotSettings.ConfigWriteListener() {
             @Override
             public void writeConfigResult(boolean success) {

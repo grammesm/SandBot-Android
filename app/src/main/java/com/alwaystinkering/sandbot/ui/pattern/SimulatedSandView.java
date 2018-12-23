@@ -69,7 +69,7 @@ public class SimulatedSandView extends View {
                 linePaint.setColor(Color.TRANSPARENT);
                 first = false;
             } else {
-                linePaint.setStrokeWidth(8);
+                linePaint.setStrokeWidth(2);
                 linePaint.setColor(Color.WHITE);
             }
 
@@ -82,7 +82,7 @@ public class SimulatedSandView extends View {
             lastY = y;
         }
 
-        canvas.drawCircle(lastX, lastY, 20, circlePaint);
+        canvas.drawCircle(lastX, lastY, 16, circlePaint);
     }
 
     private float translateTablePointToView(float point) {

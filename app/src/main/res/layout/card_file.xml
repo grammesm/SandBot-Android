@@ -47,6 +47,14 @@
 
 
             <ImageView
+                android:id="@+id/patternRunSim"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/play_speed" />
+
+            <ImageView
                 android:id="@+id/patternRun"
                 android:layout_width="30dp"
                 android:layout_height="30dp"

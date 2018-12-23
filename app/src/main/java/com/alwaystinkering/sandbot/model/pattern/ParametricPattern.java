@@ -2,6 +2,8 @@ package com.alwaystinkering.sandbot.model.pattern;
 
 import android.util.Log;
 
+import com.alwaystinkering.sandbot.model.web.SandBotFile;
+
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import net.objecthunter.exp4j.ValidationResult;
@@ -12,12 +14,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class Pattern {
-    private static final String TAG = "Pattern";
+public class ParametricPattern extends AbstractPattern{
+    private static final String TAG = "ParametricPattern";
 
-    public static final String PATTERN_NAME_EXTRA_KEY = "patternName";
-
-    private String name;
     private String declarationString;
     private String expressionString;
 
@@ -28,14 +27,15 @@ public class Pattern {
     private Map<String, Double> runningParamToValue = new HashMap<>();
     private String validationResults = "";
 
-    public Pattern(String name, String declarations, String expressions) {
+    public ParametricPattern(String name) {
+        super(name, FileType.PARAM);
+    }
+
+    public ParametricPattern(String name, String declarations, String expressions) {
+        super(name, FileType.PARAM);
         this.name = name;
         this.declarationString = declarations;
         this.expressionString = expressions;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public void setDeclarationString(String declarationString) {
@@ -44,10 +44,6 @@ public class Pattern {
 
     public void setExpressionString(String expressionString) {
         this.expressionString = expressionString;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String getDeclarationString() {
@@ -73,6 +69,12 @@ public class Pattern {
         runningParamToValue.putAll(paramToValue);
     }
 
+    @Override
+    public boolean processSandbotFile(SandBotFile file) {
+        return false;
+    }
+
+    @Override
     public Coordinate processNextEvaluation() {
         for (ExpressionContainer exp : expToEval) {
             //Log.d(TAG, "Exp validation: " + exp.getExpression().validate(false).isValid() + ":" + exp.getExpression().validate(false).getErrors());
@@ -82,6 +84,7 @@ public class Pattern {
         return new Coordinate(runningParamToValue.get("x").floatValue(), runningParamToValue.get("y").floatValue());
     }
 
+    @Override
     public boolean isStopped() {
         Log.d(TAG, "Evaluating: " + stopExpression.toString());
         Log.d(TAG, "Values: " + runningParamToValue.toString());

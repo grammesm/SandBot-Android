@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.alwaystinkering.sandbot.R;
-import com.alwaystinkering.sandbot.model.pattern.Pattern;
+import com.alwaystinkering.sandbot.model.pattern.ParametricPattern;
 import com.alwaystinkering.sandbot.model.state.SandBotStateManager;
 import com.alwaystinkering.sandbot.model.web.SandBotSettings;
 
@@ -30,35 +30,35 @@ public class PatternEditActivity extends AppCompatActivity {
     private Button simButton;
     private Button saveButton;
 
-    private Pattern pattern;
+    private ParametricPattern parametricPattern;
 
     private String originalName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pattern_edit);
+        setContentView(R.layout.activity_param_pattern_edit);
 
         if (getIntent().getExtras() != null) {
             Log.d(TAG, "Extras supplied");
-            originalName = getIntent().getStringExtra(Pattern.PATTERN_NAME_EXTRA_KEY);
+            originalName = getIntent().getStringExtra(ParametricPattern.PATTERN_NAME_EXTRA_KEY);
             if (originalName != null) {
-                pattern = SandBotStateManager.getSandBotSettings().getPatterns().get(originalName);
+                //parametricPattern = SandBotStateManager.getSandBotSettings().getPatterns().get(originalName);
             } else {
-                Log.d(TAG, "Pattern name not found!");
-                pattern = new Pattern("", "", "");
+                Log.d(TAG, "ParametricPattern name not found!");
+                parametricPattern = new ParametricPattern("", "", "");
             }
         } else {
-            Log.d(TAG, "No pattern name defined, creating new");
-            pattern = new Pattern("", "", "");
+            Log.d(TAG, "No parametricPattern name defined, creating new");
+            parametricPattern = new ParametricPattern("", "", "");
         }
 
         name = findViewById(R.id.patternNameInput);
         declaraions = findViewById(R.id.patternDecInput);
         expressions = findViewById(R.id.patternExpInput);
-        name.setText(pattern.getName());
-        declaraions.setText(pattern.getDeclarationString());
-        expressions.setText(pattern.getExpressionString());
+        name.setText(parametricPattern.getName());
+        declaraions.setText(parametricPattern.getDeclarationString());
+        expressions.setText(parametricPattern.getExpressionString());
         declaraions.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -117,7 +117,7 @@ public class PatternEditActivity extends AppCompatActivity {
         simButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new PatternSimulationDialog(tableRadius, pattern, PatternEditActivity.this).show();
+                new PatternSimulationDialog(tableRadius, parametricPattern, PatternEditActivity.this).show();
             }
         });
 
@@ -137,8 +137,8 @@ public class PatternEditActivity extends AppCompatActivity {
         validateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pattern != null) {
-                    boolean valid = pattern.validate();
+                if (parametricPattern != null) {
+                    boolean valid = parametricPattern.validate();
                     simButton.setEnabled(valid);
                     saveButton.setEnabled(valid);
                     if (valid) {
@@ -147,7 +147,7 @@ public class PatternEditActivity extends AppCompatActivity {
 
                     } else {
                         check.setVisibility(View.GONE);
-                        Log.d(TAG, pattern.getValidationResults());
+                        Log.d(TAG, parametricPattern.getValidationResults());
                     }
                 }
             }
@@ -160,9 +160,9 @@ public class PatternEditActivity extends AppCompatActivity {
     }
 
     private void textChanged() {
-        pattern.setName(name.getText().toString().trim());
-        pattern.setDeclarationString(declaraions.getText().toString().trim());
-        pattern.setExpressionString(expressions.getText().toString().trim());
+        parametricPattern.setName(name.getText().toString().trim());
+        parametricPattern.setDeclarationString(declaraions.getText().toString().trim());
+        parametricPattern.setExpressionString(expressions.getText().toString().trim());
         saveButton.setEnabled(false);
         simButton.setEnabled(false);
         check.setVisibility(View.GONE);
@@ -173,19 +173,19 @@ public class PatternEditActivity extends AppCompatActivity {
             Log.e(TAG, "Name can not be empty!");
             new AlertDialog.Builder(PatternEditActivity.this)
                     .setTitle("ERROR")
-                    .setMessage("Pattern name must be defined to save")
+                    .setMessage("ParametricPattern name must be defined to save")
                     .setPositiveButton("OK", null)
                     .show();
             return;
         }
 
-        // Remove the old pattern if it exists
+        // Remove the old parametricPattern if it exists
         if (originalName != null) {
-            SandBotStateManager.getSandBotSettings().getPatterns().remove(originalName);
+            //SandBotStateManager.getSandBotSettings().getPatterns().remove(originalName);
         }
 
-        // Save the newly created/edited pattern
-        SandBotStateManager.getSandBotSettings().getPatterns().put(pattern.getName(), pattern);
+        // Save the newly created/edited parametricPattern
+        //SandBotStateManager.getSandBotSettings().getPatterns().put(parametricPattern.getName(), parametricPattern);
         SandBotStateManager.getSandBotSettings().writeConfig(new SandBotSettings.ConfigWriteListener() {
             @Override
             public void writeConfigResult(boolean success) {

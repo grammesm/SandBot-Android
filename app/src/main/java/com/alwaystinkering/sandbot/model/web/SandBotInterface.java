@@ -33,6 +33,12 @@ public interface SandBotInterface {
     @GET("/status")
     Call<ResponseBody> getStatus();
 
+    @GET("/filelist/")
+    Call<FileListResult> listFiles();
+
+    @GET("/files/{fsName}/{fileName}")
+    Call<Result> getFile(@Path("fsName") String fsName, @Path("fileName") String fileName);
+
 
     //@Headers({"Content-Type: application/json"})
     @POST("/postsettings")

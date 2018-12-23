@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.alwaystinkering.sandbot.R;
-import com.alwaystinkering.sandbot.model.pattern.Pattern;
+import com.alwaystinkering.sandbot.model.pattern.AbstractPattern;
 
 public class PatternSimulationDialog {
 
@@ -18,7 +18,7 @@ public class PatternSimulationDialog {
     private AlertDialog dialog;
 
     private int radius = 200;
-    private Pattern pattern;
+    private AbstractPattern pattern;
 
     private Context context;
 
@@ -31,7 +31,7 @@ public class PatternSimulationDialog {
 
     private boolean stop;
 
-    public PatternSimulationDialog(int radius, Pattern pattern, Context context) {
+    public PatternSimulationDialog(int radius, AbstractPattern pattern, Context context) {
         this.pattern = pattern;
         this.context = context;
         this.radius = radius;
@@ -91,7 +91,7 @@ public class PatternSimulationDialog {
 
     private void startSim() {
         Log.d(TAG, "Starting Sim of patter: " + pattern.getName());
-        Log.d(TAG, "Pattern Expressions: " + pattern.getExpressionString());
+        //Log.d(TAG, "ParametricPattern Expressions: " + pattern.getExpressionString());
         playButton.setEnabled(false);
         pauseButton.setEnabled(true);
         stopButton.setEnabled(true);
@@ -124,16 +124,10 @@ public class PatternSimulationDialog {
             int count = 0;
             while (!stop && running) {
 
-//                x = Double.valueOf((190 - t * 5) * Math.sin(t)).floatValue();
-//                y = Double.valueOf((190 - t * 5) * Math.cos(t)).floatValue();
-//                Coordinate c = new Coordinate(x, y);
                 sandView.addCoordinateAndRender(pattern.processNextEvaluation());
-                //t += 0.01;
-
-                stop = pattern.isStopped();//count >= 2000;//t >= 30;
-
+                stop = pattern.isStopped();
                 try {
-                    Thread.sleep(5);
+                    Thread.sleep(2);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

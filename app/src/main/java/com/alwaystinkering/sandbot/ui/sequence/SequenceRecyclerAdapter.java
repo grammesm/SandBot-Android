@@ -92,9 +92,9 @@ public class SequenceRecyclerAdapter extends RecyclerView.Adapter<SequenceRecycl
             public void onClick(View v) {
                 sequence.setAutoRun(!sequence.isAutoRun());
                 if (sequence.isAutoRun()) {
-                    SandBotStateManager.getSandBotSettings().setStartup("g28;" + sequence.getName());
+                    //SandBotStateManager.getSandBotSettings().setStartup("g28;" + sequence.getName());
                 } else {
-                    SandBotStateManager.getSandBotSettings().setStartup("");
+                    //SandBotStateManager.getSandBotSettings().setStartup("");
                 }
                 SandBotStateManager.getSandBotSettings().writeConfig(new SandBotSettings.ConfigWriteListener() {
                     @Override
@@ -142,9 +142,9 @@ public class SequenceRecyclerAdapter extends RecyclerView.Adapter<SequenceRecycl
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if (sequence.isAutoRun()) {
-                                    SandBotStateManager.getSandBotSettings().setStartup("");
+                                    //SandBotStateManager.getSandBotSettings().setStartup("");
                                 }
-                                SandBotStateManager.getSandBotSettings().getSequences().remove(sequence.getName());
+                                //SandBotStateManager.getSandBotSettings().getSequences().remove(sequence.getName());
                                 SandBotStateManager.getSandBotSettings().writeConfig(new SandBotSettings.ConfigWriteListener() {
                                     @Override
                                     public void writeConfigResult(boolean success) {

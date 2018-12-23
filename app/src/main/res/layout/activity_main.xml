@@ -39,16 +39,10 @@
                 android:text="@string/tab_text_1" />
 
             <android.support.design.widget.TabItem
-                android:id="@+id/patternTab"
+                android:id="@+id/fileTab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tab_text_2" />
-
-            <android.support.design.widget.TabItem
-                android:id="@+id/sequenceTab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tab_text_3" />
 
         </android.support.design.widget.TabLayout>
         <TextView
@@ -60,6 +54,16 @@
             android:gravity="center_horizontal"
             android:padding="4dp"
             android:text="Error Communicating with Sand Bot"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/testMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/orange_idle"
+            android:textColor="@color/white"
+            android:gravity="center_horizontal"
+            android:padding="4dp"
+            android:text="Test Mode ON. No remote files."
             android:visibility="gone"/>
     </android.support.design.widget.AppBarLayout>
 

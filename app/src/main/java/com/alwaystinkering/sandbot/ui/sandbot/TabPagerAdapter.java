@@ -7,12 +7,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 public class TabPagerAdapter extends FragmentPagerAdapter {
 
     private static final int TAB_BOT = 0;
-    private static final int TAB_PATTERN = 1;
-    private static final int TAB_SEQUENCE = 2;
+    private static final int TAB_FILES = 1;
 
     private BotFragment botFragment;
     private PatternFragment patternFragment;
-    private SequenceFragment sequenceFragment;
 
     private boolean enabled = true;
 
@@ -27,9 +25,6 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
         if (patternFragment != null) {
             patternFragment.refresh();
         }
-        if (sequenceFragment != null) {
-            sequenceFragment.refresh();
-        }
     }
 
     public void disable() {
@@ -38,9 +33,6 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
         }
         if (patternFragment != null) {
             patternFragment.disable();
-        }
-        if (sequenceFragment != null) {
-            sequenceFragment.disable();
         }
         enabled = false;
     }
@@ -51,9 +43,6 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
         }
         if (patternFragment != null) {
             patternFragment.enable();
-        }
-        if (sequenceFragment != null) {
-            sequenceFragment.enable();
         }
         enabled = true;
     }
@@ -69,17 +58,15 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case TAB_BOT:
                 return botFragment = new BotFragment();
-            case TAB_PATTERN:
+            case TAB_FILES:
                 return patternFragment = new PatternFragment();
-            case TAB_SEQUENCE:
-                return sequenceFragment = new SequenceFragment();
         }
         return null;
     }
 
     @Override
     public int getCount() {
-        // Show 3 total pages.
-        return 3;
+        // Show 2 total pages.
+        return 2;
     }
 }
