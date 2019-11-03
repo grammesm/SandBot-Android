@@ -6,12 +6,14 @@ import com.alwaystinkering.sandbot.model.pattern.AbstractPattern;
 import com.alwaystinkering.sandbot.model.pattern.FileType;
 import com.alwaystinkering.sandbot.model.pattern.ParametricPattern;
 import com.alwaystinkering.sandbot.model.pattern.ThetaRhoPattern;
+import com.alwaystinkering.sandbot.model.web.FileListResult;
 import com.alwaystinkering.sandbot.model.web.SandBotFile;
 
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,7 @@ public class FileManager {
 
     public interface FileManagerListener {
         void listUpdated();
+        void storageSize(long totalBytes, long usedBytes);
     }
 
     private static final String TAG = "FileManager";
@@ -27,10 +30,20 @@ public class FileManager {
 
     private static String fileSystemName = "";
 
+    private static long totalBytes;
+    private static long usedBytes;
+
+    private static List<FileManagerListener> listeners = new ArrayList<>();
+
     public static String getFileSystemName() {
         return fileSystemName;
     }
 
+    public static void addListener(FileManagerListener l) {
+        if (!listeners.contains(l)) {
+            listeners.add(l);
+        }
+    }
     public static void setFileSystemName(String fileSystemName) {
         FileManager.fileSystemName = fileSystemName;
     }
@@ -58,11 +71,39 @@ public class FileManager {
                 break;
         }
 
+        if (pattern != null) {
+            files.put(pattern.getName(), pattern);
+        }
 
         return true;
     }
 
-    public static void initializeTestFiles(FileManagerListener listener) {
+    public static void processFileList(FileListResult fileListResult) {
+        totalBytes = fileListResult.getDiskSize().longValue();
+        usedBytes = fileListResult.getDiskUsed().longValue();
+        fileSystemName = fileListResult.getFsName();
+
+        for (FileManagerListener l : listeners) {
+            l.storageSize(totalBytes, usedBytes);
+        }
+
+        for (SandBotFile file : fileListResult.getSandBotFiles()) {
+            createPatternFromFile(file);
+        }
+        for (FileManagerListener l : listeners) {
+            l.listUpdated();
+        }
+    }
+
+    public static long getTotalBytes() {
+        return totalBytes;
+    }
+
+    public static long getUsedBytes() {
+        return usedBytes;
+    }
+
+    public static void initializeTestFiles() {
         String dir = "/sdcard/sand/";
         Log.d(TAG, "Attempting to get files from: " + dir);
         //Log.d(TAG, "SD Card listing: " + Environment.getExternalStorageDirectory().listFiles().toString());
@@ -93,8 +134,8 @@ public class FileManager {
                     files.put(abstractPattern.getName(), abstractPattern);
                 }
 
-                if (listener != null) {
-                    listener.listUpdated();
+                for (FileManagerListener l : listeners) {
+                    l.listUpdated();
                 }
             }
         }
@@ -107,4 +148,11 @@ public class FileManager {
     public static List<AbstractPattern> getFiles() {
         return new ArrayList<>(files.values());
     }
+
+    public static Comparator<AbstractPattern> FILE_NAME_COMPARATOR = new Comparator<AbstractPattern>() {
+        @Override
+        public int compare(AbstractPattern o1, AbstractPattern o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
+    };
 }

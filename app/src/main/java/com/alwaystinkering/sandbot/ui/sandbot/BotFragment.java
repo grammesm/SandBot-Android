@@ -8,11 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.alwaystinkering.sandbot.R;
+import com.alwaystinkering.sandbot.model.state.FileManager;
 import com.alwaystinkering.sandbot.model.state.SandBotStateManager;
 import com.alwaystinkering.sandbot.model.web.Result;
 import com.alwaystinkering.sandbot.model.web.SandBotStatus;
@@ -33,6 +35,10 @@ public class BotFragment extends SandBotTab {
     private ImageView manualBrightness;
     private ImageView autoBrightness;
     private SeekBar speed;
+
+    private ProgressBar filesProgress;
+    private TextView filesText;
+
     private TextView state;
     private TextView numOps;
 
@@ -55,6 +61,10 @@ public class BotFragment extends SandBotTab {
         manualBrightness = rootView.findViewById(R.id.ledManualBrightness);
         autoBrightness = rootView.findViewById(R.id.ledAutoBrightness);
         speed = rootView.findViewById(R.id.speedSeekBar);
+
+        filesProgress = rootView.findViewById(R.id.storageProgress);
+        filesText = rootView.findViewById(R.id.storageText);
+
         state = rootView.findViewById(R.id.status_state_text);
         numOps = rootView.findViewById(R.id.status_num_ops);
 
@@ -260,6 +270,15 @@ public class BotFragment extends SandBotTab {
             manualBrightness.setColorFilter(getResources().getColor(R.color.green_selected));
             ledBrightness.setEnabled(true);
         }
+        long total = FileManager.getTotalBytes();
+        if (total > 0) {
+            long used = FileManager.getUsedBytes();
+            filesText.setText(humanReadableByteCount(used, true) + "/" + humanReadableByteCount(total, true));
+            int progress = Double.valueOf((double)used / (double)total * 100).intValue();
+            filesProgress.setProgress(progress);
+        }
+
+
         numOps.setText(String.valueOf(SandBotStateManager.getSandBotStatus().getQd()));
         if (SandBotStateManager.getSandBotStatus().getQd() > 0) {
             state.setText("Running");
@@ -296,5 +315,13 @@ public class BotFragment extends SandBotTab {
         autoBrightness.setColorFilter(getResources().getColor(R.color.light_gray));
         manualBrightness.setColorFilter(getResources().getColor(R.color.light_gray));
 
+    }
+
+    private String humanReadableByteCount(long bytes, boolean si) {
+        int unit = si ? 1000 : 1024;
+        if (bytes < unit) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
+        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 }

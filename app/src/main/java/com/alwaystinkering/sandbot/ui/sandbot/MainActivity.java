@@ -24,7 +24,6 @@ import com.alwaystinkering.sandbot.R;
 import com.alwaystinkering.sandbot.model.state.FileManager;
 import com.alwaystinkering.sandbot.model.state.SandBotStateManager;
 import com.alwaystinkering.sandbot.model.web.FileListResult;
-import com.alwaystinkering.sandbot.model.web.SandBotFile;
 import com.alwaystinkering.sandbot.model.web.SandBotWeb;
 import com.alwaystinkering.sandbot.ui.settings.SettingsActivity;
 
@@ -44,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private Thread statusThread;
     private boolean statusRunning = false;
 
-    private boolean test = true;
+    private boolean test = false;
+    public static int tableDiameter;
 
 
     private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -59,6 +59,10 @@ public class MainActivity extends AppCompatActivity {
                 sectionsPagerAdapter.disable();
                 //clearView();
                 getSettings();
+            } else if (s.equals(getResources().getString(R.string.pref_server_key))) {
+                String radiusString = sharedPreferences.getString(getResources().getString(R.string.pref_diameter_key), getResources().getString(R.string.pref_diameter_default)).trim();
+                tableDiameter = Integer.parseInt(radiusString);
+                Log.d(TAG, "Set Diameter to " + tableDiameter);
             }
         }
     };
@@ -121,6 +125,10 @@ public class MainActivity extends AppCompatActivity {
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
+        String radiusString = sharedPreferences.getString(getResources().getString(R.string.pref_diameter_key), getResources().getString(R.string.pref_diameter_default)).trim();
+        tableDiameter = Integer.parseInt(radiusString);
+
+
     }
 
     private void showCommsError() {
@@ -134,14 +142,25 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         SandBotStateManager.getSandBotSettings().clear();
         sectionsPagerAdapter.disable();
-        //getSettings();
-        //getFiles();
+        FileManager.addListener(new FileManager.FileManagerListener() {
+            @Override
+            public void listUpdated() {
+                refresh();
+            }
 
-//        // Start status
-//        if (statusThread == null) {
-//            statusThread = new Thread(statusRunnable);
-//            statusThread.start();
-//        }
+            @Override
+            public void storageSize(long totalBytes, long usedBytes) {
+                refresh();
+            }
+        });
+
+        getFiles();
+
+        // Start status
+        if (statusThread == null) {
+            statusThread = new Thread(statusRunnable);
+            statusThread.start();
+        }
 
         if (test) {
             testMode.setVisibility(View.VISIBLE);
@@ -152,12 +171,7 @@ public class MainActivity extends AppCompatActivity {
                                 Manifest.permission.READ_EXTERNAL_STORAGE},
                         33);
             } else {
-                FileManager.initializeTestFiles(new FileManager.FileManagerListener() {
-                    @Override
-                    public void listUpdated() {
-                        refresh();
-                    }
-                });
+                FileManager.initializeTestFiles();
             }
         }
     }
@@ -168,12 +182,7 @@ public class MainActivity extends AppCompatActivity {
                                            int[] grantResults) {
         if (requestCode == 33) {
             if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                FileManager.initializeTestFiles(new FileManager.FileManagerListener() {
-                    @Override
-                    public void listUpdated() {
-                        refresh();
-                    }
-                });
+                FileManager.initializeTestFiles();
             }
         }
     }
@@ -216,18 +225,27 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<FileListResult>() {
             @Override
             public void onResponse(Call<FileListResult> call, Response<FileListResult> response) {
+                commsError.setVisibility(View.GONE);
                 FileListResult result = response.body();
                 if (result != null) {
-                    Log.d(TAG, result.toString());
-                    FileManager.setFileSystemName(result.getFsName());
-                    for (SandBotFile f : response.body().getSandBotFiles()) {
-                        FileManager.createPatternFromFile(f);
-                    }
+//                    filesLayout.setVisibility(View.VISIBLE);
+//                    long total = result.getDiskUsed().longValue();
+//                    long used = result.getDiskSize().longValue();
+//                    filesText.setText(FileUtils.byteCountToDisplaySize(used) + "/" + FileUtils.byteCountToDisplaySize(total));
+//                    filesProgress.setProgress(Long.valueOf(used / total).intValue());
+
+                    FileManager.processFileList(result);
+//                    Log.d(TAG, result.toString());
+//                    FileManager.setFileSystemName(result.getFsName());
+//                    for (SandBotFile f : response.body().getSandBotFiles()) {
+//                        FileManager.createPatternFromFile(f);
+//                    }
                 }
             }
 
             @Override
             public void onFailure(Call<FileListResult> call, Throwable t) {
+//                filesLayout.setVisibility(View.GONE);
                 showCommsError();
                 Log.e(TAG, "SandBotFile List Fail");
             }
@@ -247,7 +265,9 @@ public class MainActivity extends AppCompatActivity {
                     SandBotStateManager.getSandBotSettings().clear();
                     SandBotStateManager.getSandBotSettings().parse(json);
                     Log.d(TAG, "onResponse : " + SandBotStateManager.getSandBotSettings().toJson());
-                    sectionsPagerAdapter.enable();
+                    if (!sectionsPagerAdapter.isEnabled()) {
+                        sectionsPagerAdapter.enable();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -258,7 +278,9 @@ public class MainActivity extends AppCompatActivity {
                 showCommsError();
                 SandBotStateManager.getSandBotSettings().clear();
                 Log.e(TAG, "onFailure: " + t.getLocalizedMessage());
-                sectionsPagerAdapter.disable();
+                if (sectionsPagerAdapter.isEnabled()) {
+                    sectionsPagerAdapter.disable();
+                }
             }
         });
     }
@@ -286,14 +308,18 @@ public class MainActivity extends AppCompatActivity {
                         }
                         Log.d(TAG, "Status JSON: " + json);
                         SandBotStateManager.getSandBotStatus().parse(json);
-                        sectionsPagerAdapter.enable();
+                        if (!sectionsPagerAdapter.isEnabled()) {
+                            sectionsPagerAdapter.enable();
+                        }
                         refresh();
                     }
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
                         showCommsError();
-                        sectionsPagerAdapter.disable();
+                        if (sectionsPagerAdapter.isEnabled()) {
+                            sectionsPagerAdapter.disable();
+                        }
                     }
                 });
                 try {

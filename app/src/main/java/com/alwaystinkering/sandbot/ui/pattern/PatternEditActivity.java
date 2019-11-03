@@ -13,9 +13,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.alwaystinkering.sandbot.R;
+import com.alwaystinkering.sandbot.model.pattern.AbstractPattern;
 import com.alwaystinkering.sandbot.model.pattern.ParametricPattern;
+import com.alwaystinkering.sandbot.model.state.FileManager;
 import com.alwaystinkering.sandbot.model.state.SandBotStateManager;
+import com.alwaystinkering.sandbot.model.web.ParametricFile;
 import com.alwaystinkering.sandbot.model.web.SandBotSettings;
+import com.alwaystinkering.sandbot.model.web.SandBotWeb;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class PatternEditActivity extends AppCompatActivity {
@@ -42,8 +50,16 @@ public class PatternEditActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             Log.d(TAG, "Extras supplied");
             originalName = getIntent().getStringExtra(ParametricPattern.PATTERN_NAME_EXTRA_KEY);
+            Log.d(TAG, "originalName: " + originalName);
             if (originalName != null) {
-                //parametricPattern = SandBotStateManager.getSandBotSettings().getPatterns().get(originalName);
+                AbstractPattern pattern = FileManager.getFilesMap().get(originalName);
+                if (pattern instanceof ParametricPattern) {
+                    parametricPattern = (ParametricPattern) pattern;
+                } else {
+                    Log.e(TAG, originalName + " is not a parametric pattern");
+                    finish();
+                    return;
+                }
             } else {
                 Log.d(TAG, "ParametricPattern name not found!");
                 parametricPattern = new ParametricPattern("", "", "");
@@ -57,8 +73,8 @@ public class PatternEditActivity extends AppCompatActivity {
         declaraions = findViewById(R.id.patternDecInput);
         expressions = findViewById(R.id.patternExpInput);
         name.setText(parametricPattern.getName());
-        declaraions.setText(parametricPattern.getDeclarationString());
-        expressions.setText(parametricPattern.getExpressionString());
+//        declaraions.setText(parametricPattern.getDeclarationString());
+//        expressions.setText(parametricPattern.getExpressionString());
         declaraions.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -111,8 +127,8 @@ public class PatternEditActivity extends AppCompatActivity {
         check = findViewById(R.id.validationCheck);
         simButton = findViewById(R.id.patternRunButton);
 
-        String prefRadius = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.pref_diameter_key), getResources().getString(R.string.pref_diameter_default));
-        final int tableRadius = Integer.valueOf(prefRadius);
+        String prefDiameter = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getResources().getString(R.string.pref_diameter_key), getResources().getString(R.string.pref_diameter_default));
+        final int tableRadius = Integer.valueOf(prefDiameter) / 2;
 
         simButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,7 +173,43 @@ public class PatternEditActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+        // Try and download
+        downloadFile();
+
     }
+
+    public void downloadFile() {
+        Log.d(TAG, "Download File: " + parametricPattern.getName());
+        Call<ParametricFile> call = SandBotWeb.getInterface().getParametricFile(FileManager.getFileSystemName(), parametricPattern.getName());
+        call.enqueue(new Callback<ParametricFile>() {
+            @Override
+            public void onResponse(Call<ParametricFile> call, Response<ParametricFile> response) {
+                Log.d(TAG, "SandBotFile Downloaded: " + parametricPattern.getName());
+                final ParametricFile result = response.body();
+                if (result != null) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            processFile(result);
+                        }
+                    });
+                } else {
+                    Log.e(TAG, "SandBotFile : " + parametricPattern.getName() + " could not be parsed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ParametricFile> call, Throwable t) {
+                Log.e(TAG, "SandBotFile Download Fail: " + parametricPattern.getName());
+            }
+        });
+    }
+
+    private void processFile(ParametricFile file) {
+        declaraions.setText(file.getSetup());
+        expressions.setText(file.getLoop());
+    }
+
 
     private void textChanged() {
         parametricPattern.setName(name.getText().toString().trim());

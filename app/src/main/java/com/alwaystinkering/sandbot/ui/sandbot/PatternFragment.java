@@ -10,11 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.alwaystinkering.sandbot.R;
+import com.alwaystinkering.sandbot.model.pattern.AbstractPattern;
 import com.alwaystinkering.sandbot.model.state.FileManager;
 import com.alwaystinkering.sandbot.ui.pattern.PatternEditActivity;
 import com.alwaystinkering.sandbot.ui.pattern.PatternRecyclerAdapter;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class PatternFragment extends SandBotTab {
 
@@ -25,6 +27,8 @@ public class PatternFragment extends SandBotTab {
     private RecyclerView.Adapter patternListAdapter;
     private RecyclerView.LayoutManager patternListLayoutManager;
     private FloatingActionButton newPattern;
+
+    private int numFiles = 0;
 
     public PatternFragment() {
     }
@@ -69,10 +73,17 @@ public class PatternFragment extends SandBotTab {
 
     @Override
     void refresh() {
-        patternListAdapter =
-                new PatternRecyclerAdapter((MainActivity) getActivity(),
-                        new ArrayList<>(FileManager.getFilesMap().values()));
-        patternList.setAdapter(patternListAdapter);
+        int files = FileManager.getFilesMap().size();
+        if (patternListAdapter == null || numFiles != files) {
+            List<AbstractPattern> fileList = FileManager.getFiles();
+            Collections.sort(fileList, FileManager.FILE_NAME_COMPARATOR);
+            patternListAdapter =
+                    new PatternRecyclerAdapter((MainActivity) getActivity(), fileList);
+            patternList.setAdapter(patternListAdapter);
+            numFiles = files;
+        } else {
+            patternListAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override

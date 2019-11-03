@@ -3,6 +3,7 @@ package com.alwaystinkering.sandbot.model.pattern;
 import android.util.Log;
 
 import com.alwaystinkering.sandbot.model.web.SandBotFile;
+import com.alwaystinkering.sandbot.ui.sandbot.MainActivity;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -115,6 +116,9 @@ public class ParametricPattern extends AbstractPattern{
 
                 // Make sure there is a declaration in the string
                 if (!dec.isEmpty()) {
+
+                    // Replace any variables
+                    dec = dec.replace("sizex", Integer.toString(MainActivity.tableDiameter));
 
                     // Should be 2 parts with an assignment
                     String[] parts = dec.split("=");

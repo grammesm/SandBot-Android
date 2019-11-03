@@ -12,7 +12,7 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
     private BotFragment botFragment;
     private PatternFragment patternFragment;
 
-    private boolean enabled = true;
+    private boolean enabled = false;
 
     public TabPagerAdapter(FragmentManager fm) {
         super(fm);
