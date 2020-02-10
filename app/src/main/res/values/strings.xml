@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SandBot</string>
+    <string name="app_name">Sandbot</string>
     <string name="action_settings">Settings</string>
 
     <string name="pref_server_title">HTTP Server IP</string>
@@ -10,6 +10,16 @@
     <string name="pref_diameter_key">pref_diameter_key</string>
     <string name="pref_diameter_default">400</string>
 
-    <string name="tab_text_1">Bot</string>
-    <string name="tab_text_2">Files</string>
+    <string name="tab_text_bot">Bot</string>
+    <string name="tab_text_files">Files</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="network_header">Network</string>
+    <string name="sim_header">Simulation</string>
+
+    <string name="state_idle">IDLE</string>
+    <string name="state_running">RUNNING</string>
+
+    <string name="disk_usage">%s/%s</string>
 </resources>

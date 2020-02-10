@@ -1,107 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/activity_vertical_margin"
-    tools:context=".ui.sandbot.BotFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!--<TextView-->
-        <!--android:id="@+id/name_label"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignBottom="@id/name_input"-->
-        <!--android:layout_marginBottom="10dp"-->
-        <!--android:text="Name: " />-->
-
-    <!--<EditText-->
-        <!--android:id="@+id/name_input"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_toEndOf="@id/name_label"-->
-        <!--android:layout_toRightOf="@id/name_label"-->
-        <!--android:inputType="text|textCapWords"-->
-        <!--android:maxLines="1"-->
-        <!--android:minEms="10" />-->
-
-
-    <include
-        android:id="@+id/led_card"
+    <RelativeLayout
+        android:id="@+id/botLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/card_led"/>
-
-    <include
-        android:id="@+id/speed_card"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/card_speed"
-        android:layout_below="@id/led_card" />
-
-    <include
-        android:id="@+id/status_storage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/card_storage"
-        android:layout_below="@id/speed_card" />
-
-    <include
-        android:id="@+id/status_card"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/card_status"
-        android:layout_below="@id/status_storage" />
+        android:layout_height="match_parent">
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/botPlay"
-            android:layout_width="0dip"
+        <include
+            android:id="@+id/controlsCard"
+            layout="@layout/card_controls"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/fab_margin"
-            android:layout_marginEnd="@dimen/fab_margin"
-            android:layout_marginBottom="72dp"
-            android:layout_weight="1"
-            android:src="@drawable/play" />
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"/>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/botPause"
-            android:layout_width="0dip"
+        <include
+            android:id="@+id/ledCard"
+            layout="@layout/card_led"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/fab_margin"
-            android:layout_marginEnd="@dimen/fab_margin"
-            android:layout_marginBottom="72dp"
-            android:layout_weight="1"
-            android:src="@drawable/pause" />
+            android:layout_below="@id/controlsCard"
+            />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/botStop"
-            android:layout_width="0dip"
+        <include
+            android:id="@+id/storageCard"
+            layout="@layout/card_storage"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/fab_margin"
-            android:layout_marginEnd="@dimen/fab_margin"
-            android:layout_marginBottom="72dp"
-            android:layout_weight="1"
-            android:src="@drawable/stop" />
+            android:layout_below="@id/ledCard" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/botHome"
-            android:layout_width="0dip"
+
+        <include
+            android:id="@+id/statusCard"
+            layout="@layout/card_status"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/fab_margin"
-            android:layout_marginEnd="@dimen/fab_margin"
-            android:layout_marginBottom="72dp"
-            android:layout_weight="1"
-            android:src="@drawable/home" />
+            android:layout_below="@id/storageCard" />
 
-    </LinearLayout>
-
-</RelativeLayout>
+    </RelativeLayout>
+</layout>

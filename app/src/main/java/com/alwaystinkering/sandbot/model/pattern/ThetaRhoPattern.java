@@ -2,7 +2,7 @@ package com.alwaystinkering.sandbot.model.pattern;
 
 import android.util.Log;
 
-import com.alwaystinkering.sandbot.model.web.SandBotFile;
+import com.alwaystinkering.sandbot.data.SandBotFile;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,7 +10,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class ThetaRhoPattern extends AbstractPattern {
 
@@ -36,18 +38,30 @@ public class ThetaRhoPattern extends AbstractPattern {
         super(name, FileType.THETA_RHO);
     }
 
+    public ThetaRhoPattern(String name, String commandsString) {
+        super(name, FileType.THETA_RHO);
+        //Log.d(TAG, "Commands: " + commandsString);
+        commands = Arrays.asList(commandsString.split(Pattern.quote("\n")));
+    }
+
 
     @Override
     public Coordinate processNextEvaluation() {
-        Log.d(TAG, "process Next. Line in progress: " + lineInProgress + ", Count: " + lineCount);
+        //Log.d(TAG, "process Next. Line in progress: " + lineInProgress + ", Count: " + lineCount);
         if (!lineInProgress) {
-            String line = commands.get(lineCount);
-            Log.d(TAG, "Processing line: " + line);
+            String line = commands.get(lineCount++).trim();
+            //Log.d(TAG, "Processing line: " + line);
+            while ((line.contains("#") || line.isEmpty())) {
+                if (lineCount >= commands.size()) {
+                    return null;
+                }
+                line = commands.get(lineCount++).trim();
+            }
             String[] parts = line.split(" ");
             float theta = Float.parseFloat(parts[0].trim());
             float rho = Float.parseFloat(parts[1].trim());
             calculateIncrements(theta, rho);
-            lineCount++;
+            //lineCount++;
         }
         return advance();
     }
@@ -80,12 +94,12 @@ public class ThetaRhoPattern extends AbstractPattern {
         _curStep++;
         if (_curStep >= _totalSteps)
         {
-            Log.d(TAG, "Finished with line. Current Step: " + _curStep + ", Total Steps: " + _totalSteps);
+            //Log.d(TAG, "Finished with line. Current Step: " + _curStep + ", Total Steps: " + _totalSteps);
             lineInProgress = false;
         }
         float xVal = (float)Math.sin(_curTheta) * _curRho * radius;
-        float yVal = (float)Math.cos(_curTheta) * _curRho * radius;
-        Log.d(TAG, "Eval. Theta: " + _curTheta + ", Rho: " + _curRho + ", X: " + xVal + ", Y: " + yVal);
+        float yVal = -(float)Math.cos(_curTheta) * _curRho * radius;
+        //Log.d(TAG, "Eval. Theta: " + _curTheta + ", Rho: " + _curRho + ", X: " + xVal + ", Y: " + yVal);
         return new Coordinate(xVal, yVal);
     }
 
@@ -102,6 +116,11 @@ public class ThetaRhoPattern extends AbstractPattern {
     @Override
     public boolean processSandbotFile(SandBotFile file) {
         return false;
+    }
+
+    @Override
+    public boolean validate() {
+        return !commands.isEmpty();
     }
 
     public boolean processFile(File file) {

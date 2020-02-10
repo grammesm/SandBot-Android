@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph"
+    app:startDestination="@id/homeViewPagerFragment">
+
+    <fragment
+        android:id="@+id/homeViewPagerFragment"
+        android:name="com.alwaystinkering.sandbot.SandBotViewPagerFragment"
+        android:label="HomeViewPagerFragment" >
+        <action
+            android:id="@+id/action_homeViewPagerFragment_to_patternPreviewFragment"
+            app:destination="@id/patternPreviewFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/patternPreviewFragment"
+        android:name="com.alwaystinkering.sandbot.ui.PatternPreviewFragment"
+        android:label="PatternPreviewFragment" >
+        <argument
+            android:name="filename"
+            app:argType="string" />
+        <argument
+            android:name="filetype"
+            app:argType="com.alwaystinkering.sandbot.model.pattern.FileType" />
+    </fragment>
+</navigation>
