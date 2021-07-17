@@ -21,6 +21,7 @@ public class SimulatedSandView extends View {
     private static final String TAG = "";
 
     private Paint linePaint;
+    private Paint borderPaint;
     private Paint circlePaint;
     private int viewRadius;
     private int tableRadius = 380; //table radius in mm
@@ -32,6 +33,9 @@ public class SimulatedSandView extends View {
     public SimulatedSandView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         linePaint = new Paint();
+        borderPaint = new Paint();
+        borderPaint.setStrokeWidth(10);
+        borderPaint.setColor(Color.DKGRAY);
         circlePaint = new Paint();
         circlePaint.setStrokeWidth(2);
         circlePaint.setColor(Color.BLACK);
@@ -72,13 +76,14 @@ public class SimulatedSandView extends View {
                 linePaint.setColor(Color.TRANSPARENT);
                 first = false;
             } else {
-                linePaint.setStrokeWidth(2);
-                linePaint.setColor(Color.WHITE);
+                linePaint.setStrokeWidth(4);
+                linePaint.setColor(getContext().getResources().getColor(R.color.sandbot_sand));
             }
 
             float x = translateTablePointToView(c.getX());
             float y = translateTablePointToView(c.getY());
 
+            canvas.drawLine(lastX, lastY, x, y, borderPaint);
             canvas.drawLine(lastX, lastY, x, y, linePaint);
 
             lastX = x;
