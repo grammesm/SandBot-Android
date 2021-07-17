@@ -16,7 +16,7 @@ public class SequencePattern extends AbstractPattern {
     }
 
     @Override
-    public Coordinate processNextEvaluation() {
+    public Coordinate processNextEvaluation(int tableDiameter) {
 //        for (ExpressionContainer exp : expToEval) {
 //            Log.d(TAG, "Exp validation: " + exp.getExpression().validate(false).isValid() + ":" + exp.getExpression().validate(false).getErrors());
 //            runningParamToValue.put(exp.getVar(), exp.getExpression().setVariables(runningParamToValue).evaluate());
@@ -37,7 +37,7 @@ public class SequencePattern extends AbstractPattern {
     }
 
     @Override
-    public boolean validate() {
+    public boolean validate(int tableDiameter) {
         return true;
     }
 }

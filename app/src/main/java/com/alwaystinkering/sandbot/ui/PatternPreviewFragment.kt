@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.navArgs
+import androidx.preference.PreferenceManager
 import androidx.viewpager2.widget.ViewPager2
 import com.alwaystinkering.sandbot.R
 import com.alwaystinkering.sandbot.adapters.BOT_PAGE_INDEX
@@ -25,6 +26,7 @@ class PatternPreviewFragment : Fragment() {
     private val TAG = "PatternPreviewFragment"
     private var running = false
     private var stop = false
+    private var tableDiameter: Int = 0
 
     private lateinit var binding: FragmentPatternPreviewBinding
 
@@ -39,6 +41,11 @@ class PatternPreviewFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        tableDiameter = PreferenceManager.getDefaultSharedPreferences(context).getString(
+            requireContext().resources.getString(R.string.pref_diameter_key),
+            requireContext().resources.getString(R.string.pref_diameter_default))!!.toInt()
+
         binding = FragmentPatternPreviewBinding.inflate(inflater, container, false)
         binding.simPlay.isEnabled = false
         binding.simPause.isEnabled = false
@@ -69,7 +76,7 @@ class PatternPreviewFragment : Fragment() {
             binding.simPlay.isEnabled = true
             binding.simPause.isEnabled = true
             binding.simStop.isEnabled = true
-            Log.d(TAG, "Validation Result: " + viewModel.pattern.value!!.validate())
+            Log.d(TAG, "Validation Result: " + viewModel.pattern.value!!.validate(tableDiameter))
         }
     }
 
@@ -108,7 +115,7 @@ class PatternPreviewFragment : Fragment() {
         var count = 0
         while (!stop && running) {
 
-            binding.simulatedSandView.addCoordinateAndRender(viewModel.pattern.value!!.processNextEvaluation())
+            binding.simulatedSandView.addCoordinateAndRender(viewModel.pattern.value!!.processNextEvaluation(tableDiameter), tableDiameter)
             stop = viewModel.pattern.value!!.isStopped
             try {
                 Thread.sleep(2)

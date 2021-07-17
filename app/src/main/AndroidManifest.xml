@@ -14,7 +14,6 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.SandBot"
         tools:ignore="GoogleAppIndexingWarning" >
-        <activity android:name=".settings.SettingsActivity"/>
         <activity
             android:name=".SandBotActivity"
             android:theme="@style/Theme.SandBot.NoActionBar">

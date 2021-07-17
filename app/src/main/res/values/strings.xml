@@ -8,7 +8,7 @@
     <string name="pref_server_default">192.168.1.</string>
 
     <string name="pref_diameter_title">Sand Area Diameter (mm)</string>
-    <string name="pref_diameter_summary">This value is used for simulating parametric patterns that are based on the radius of the table</string>
+    <string name="pref_diameter_summary">This value is used for simulating patterns that are based on the radius of the table</string>
     <string name="pref_diameter_key">pref_diameter_key</string>
     <string name="pref_diameter_default">400</string>
 

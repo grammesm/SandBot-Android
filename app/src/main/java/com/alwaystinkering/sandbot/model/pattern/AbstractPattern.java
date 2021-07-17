@@ -15,11 +15,11 @@ public abstract class AbstractPattern implements Serializable {
     protected int size = 0;
     protected boolean loaded = false;
 
-    public abstract Coordinate processNextEvaluation();
+    public abstract Coordinate processNextEvaluation(int tableDiameter);
     public abstract boolean isStopped();
     public abstract void reset();
     public abstract boolean processSandbotFile(SandBotFile file);
-    public abstract boolean validate();
+    public abstract boolean validate(int tableDiameter);
     public String getName() {
         return name;
     }

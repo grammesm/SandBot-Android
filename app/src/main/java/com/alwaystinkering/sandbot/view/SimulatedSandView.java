@@ -24,7 +24,7 @@ public class SimulatedSandView extends View {
     private Paint borderPaint;
     private Paint circlePaint;
     private int viewRadius;
-    private int tableRadius = 380; //table radius in mm
+    private int tableDiameter = 380; //table radius in mm
 
 //    private Drawable ballImage;
 
@@ -42,11 +42,8 @@ public class SimulatedSandView extends View {
 //        ballImage = context.getResources().getDrawable(R.drawable.steel_ball);
     }
 
-    public void initTableRadius(int tableRadius) {
-        this.tableRadius = tableRadius;
-    }
-
-    public void addCoordinateAndRender(Coordinate c) {
+    public void addCoordinateAndRender(Coordinate c, int tableDiameter) {
+        this.tableDiameter = tableDiameter;
         if (c != null) {
             coordinates.add(c);
             update();
@@ -94,7 +91,7 @@ public class SimulatedSandView extends View {
     }
 
     private float translateTablePointToView(float point) {
-        return ((point / tableRadius)) * viewRadius + viewRadius;
+        return ((point / tableDiameter)) * viewRadius + viewRadius;
     }
 
     @Override

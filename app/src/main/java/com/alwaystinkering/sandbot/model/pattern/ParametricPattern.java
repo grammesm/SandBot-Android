@@ -75,7 +75,7 @@ public class ParametricPattern extends AbstractPattern {
     }
 
     @Override
-    public Coordinate processNextEvaluation() {
+    public Coordinate processNextEvaluation(int tableDiameter) {
         for (ExpressionContainer exp : expToEval) {
             //Log.d(TAG, "Exp validation: " + exp.getExpression().validate(false).isValid() + ":" + exp.getExpression().validate(false).getErrors());
             runningParamToValue.put(exp.getVar(), exp.getExpression().setVariables(runningParamToValue).evaluate());
@@ -92,7 +92,7 @@ public class ParametricPattern extends AbstractPattern {
     }
 
     @Override
-    public boolean validate() {
+    public boolean validate(int tableDiameter) {
         paramToValue.clear();
         runningParamToValue.clear();
         boolean valid = true;
@@ -118,7 +118,7 @@ public class ParametricPattern extends AbstractPattern {
                 if (!dec.isEmpty()) {
 
                     // tODO // Replace any variables
-                    dec = dec.replace("sizex", "380");//Integer.toString(MainActivity.tableDiameter));
+                    dec = dec.replace("sizex", String.valueOf(tableDiameter));
 
                     // Should be 2 parts with an assignment
                     String[] parts = dec.split("=");

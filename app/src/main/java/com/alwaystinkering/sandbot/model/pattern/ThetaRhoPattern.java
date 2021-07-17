@@ -20,7 +20,6 @@ public class ThetaRhoPattern extends AbstractPattern {
 
     private List<String> commands = new ArrayList<>();
     private int lineCount = 0;
-    private int radius = 380;
 
     private float _curTheta;
     private float _curRho;
@@ -46,7 +45,7 @@ public class ThetaRhoPattern extends AbstractPattern {
 
 
     @Override
-    public Coordinate processNextEvaluation() {
+    public Coordinate processNextEvaluation(int tableDiameter) {
         //Log.d(TAG, "process Next. Line in progress: " + lineInProgress + ", Count: " + lineCount);
         if (!lineInProgress) {
             String line = commands.get(lineCount++).trim();
@@ -63,7 +62,7 @@ public class ThetaRhoPattern extends AbstractPattern {
             calculateIncrements(theta, rho);
             //lineCount++;
         }
-        return advance();
+        return advance(tableDiameter);
     }
 
     private void calculateIncrements(float theta, float rho) {
@@ -88,7 +87,7 @@ public class ThetaRhoPattern extends AbstractPattern {
 
     }
 
-    private Coordinate advance() {
+    private Coordinate advance(int tableDiameter) {
         _curTheta += _thetaInc;
         _curRho += _rhoInc;
         _curStep++;
@@ -97,8 +96,8 @@ public class ThetaRhoPattern extends AbstractPattern {
             //Log.d(TAG, "Finished with line. Current Step: " + _curStep + ", Total Steps: " + _totalSteps);
             lineInProgress = false;
         }
-        float xVal = (float)Math.sin(_curTheta) * _curRho * radius;
-        float yVal = -(float)Math.cos(_curTheta) * _curRho * radius;
+        float xVal = (float)Math.sin(_curTheta) * _curRho * tableDiameter;
+        float yVal = -(float)Math.cos(_curTheta) * _curRho * tableDiameter;
         //Log.d(TAG, "Eval. Theta: " + _curTheta + ", Rho: " + _curRho + ", X: " + xVal + ", Y: " + yVal);
         return new Coordinate(xVal, yVal);
     }
@@ -119,7 +118,7 @@ public class ThetaRhoPattern extends AbstractPattern {
     }
 
     @Override
-    public boolean validate() {
+    public boolean validate(int tableDiameter) {
         return !commands.isEmpty();
     }
 
