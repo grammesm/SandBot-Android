@@ -47,7 +47,7 @@
 
             <TextView
                 android:id="@+id/status_state_text"
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:background="@color/orange_idle"
                 android:gravity="center_horizontal"

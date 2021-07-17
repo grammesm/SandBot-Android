@@ -2,7 +2,11 @@ package com.alwaystinkering.sandbot.adapters
 
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -12,6 +16,7 @@ import com.alwaystinkering.sandbot.data.SandBotRepository
 import com.alwaystinkering.sandbot.databinding.CardFileBinding
 import com.alwaystinkering.sandbot.model.pattern.AbstractPattern
 import com.alwaystinkering.sandbot.model.pattern.FileType
+import com.google.android.material.snackbar.Snackbar
 
 
 /**
@@ -36,6 +41,8 @@ class FileAdapter : ListAdapter<AbstractPattern, RecyclerView.ViewHolder>(FileDi
         private val binding: CardFileBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         init {
+            // TODO this not working?
+            binding.patternRunSim.visibility = if (binding.pattern?.fileType != FileType.SEQUENCE) VISIBLE else GONE;
             binding.patternRun.setOnClickListener {
                 binding.pattern?.let { pattern ->
                     SandBotRepository.getInstance().playFile(pattern.name)
@@ -44,7 +51,7 @@ class FileAdapter : ListAdapter<AbstractPattern, RecyclerView.ViewHolder>(FileDi
             binding.patternRunSim.setOnClickListener {
                 binding.pattern?.let { pattern ->
                     when (pattern.fileType) {
-                        FileType.SEQUENCE -> TODO()
+                        FileType.SEQUENCE -> Snackbar.make(it, "Sequence Preview Not Implemented", Snackbar.LENGTH_LONG).show()
                         else -> navigateToPreview(pattern, it)
                     }
                 }

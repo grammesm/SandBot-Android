@@ -1,11 +1,10 @@
 package com.alwaystinkering.sandbot.data
 
 import com.alwaystinkering.sandbot.utils.StringOrJsonConverterFactory
-import com.google.gson.GsonBuilder
-
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.util.concurrent.TimeUnit
+
 
 object RetrofitService {
 
@@ -20,9 +19,16 @@ object RetrofitService {
     //            .build();
 
     fun createService(ip: String): SandBotInterface {
+
+        val okHttpClient = OkHttpClient.Builder()
+            .readTimeout(3, TimeUnit.SECONDS)
+            .connectTimeout(1, TimeUnit.SECONDS)
+            .build()
+
         retrofit = Retrofit.Builder()
             .baseUrl("http://$ip")
             .addConverterFactory(StringOrJsonConverterFactory())
+            .client(okHttpClient)
             .build()
 
         return retrofit!!.create(SandBotInterface::class.java)

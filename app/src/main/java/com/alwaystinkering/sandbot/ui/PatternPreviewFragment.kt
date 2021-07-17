@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
@@ -63,6 +64,7 @@ class PatternPreviewFragment : Fragment() {
 
     private fun subscribeUi(binding: FragmentPatternPreviewBinding) {
         viewModel.pattern.observe(viewLifecycleOwner) { result ->
+            binding.loading.isVisible = false
             binding.name.text = result.name
             binding.simPlay.isEnabled = true
             binding.simPause.isEnabled = true
@@ -122,7 +124,7 @@ class PatternPreviewFragment : Fragment() {
         if (stop) {
             Log.d(TAG, "Stop condition met")
             viewModel.pattern.value!!.reset()
-            this@PatternPreviewFragment.activity!!.runOnUiThread {
+            this@PatternPreviewFragment.requireActivity().runOnUiThread {
                 binding.simPlay.isEnabled = true
                 binding.simPause.isEnabled = false
                 binding.simStop.isEnabled = true

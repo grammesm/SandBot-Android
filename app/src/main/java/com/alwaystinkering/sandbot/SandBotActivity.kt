@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil.setContentView
 import com.alwaystinkering.sandbot.databinding.ActivitySandbotBinding
 
-class SandBotActivity: AppCompatActivity() {
+class SandBotActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

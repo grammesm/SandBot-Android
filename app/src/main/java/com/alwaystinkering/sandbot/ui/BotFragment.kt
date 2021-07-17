@@ -1,17 +1,25 @@
 package com.alwaystinkering.sandbot.ui
 
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.SeekBar
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.observe
+import androidx.navigation.findNavController
+import androidx.preference.PreferenceManager
 import com.alwaystinkering.sandbot.R
+import com.alwaystinkering.sandbot.SandBotViewPagerFragmentDirections
 import com.alwaystinkering.sandbot.data.SandBotRepository
 import com.alwaystinkering.sandbot.databinding.FragmentBotBinding
 import com.alwaystinkering.sandbot.utils.InjectorUtils
@@ -24,7 +32,31 @@ import java.util.*
 
 class BotFragment : Fragment() {
 
+    private val TAG = "BotFragment"
     private lateinit var binding: FragmentBotBinding
+    private lateinit var sharedPreferences: SharedPreferences
+    private var runTask = false
+
+    private val prefListener: SharedPreferences.OnSharedPreferenceChangeListener =
+        SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+            when (key) {
+                resources.getString(R.string.pref_server_key) -> {
+                    var ip = sharedPreferences.getString(
+                        resources.getString(R.string.pref_server_key),
+                        resources.getString(R.string.pref_server_default)
+                    )!!.trim()
+
+                    if (ip != resources.getString(R.string.pref_server_default)) {
+                        SandBotRepository.getInstance().createNewConnection(ip)
+                        if (!runTask) {
+                            runTask = true
+                            mainHandler.post(refreshStatusTask)
+                        }
+                    }
+                }
+                resources.getString(R.string.pref_diameter_key) -> Log.d(TAG, "diameter changed");
+            }
+        }
 
     private val viewModel: BotViewModel by viewModels {
         InjectorUtils.provideBotViewModelFactory(requireContext())
@@ -64,7 +96,30 @@ class BotFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG, "onCreate")
         mainHandler = Handler(Looper.getMainLooper())
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        sharedPreferences.registerOnSharedPreferenceChangeListener(prefListener)
+
+
+        val serverIp = sharedPreferences.getString(
+            resources.getString(R.string.pref_server_key),
+            resources.getString(R.string.pref_server_default)
+        )!!.trim()
+
+        if (serverIp == resources.getString(R.string.pref_server_default)) {
+            runTask = false
+            AlertDialog.Builder(requireContext())
+                .setTitle("Enter Robot IP Address")
+                .setMessage("It appears you do not have an IP address set up for the sand bot, press OK to be taken to settings to enter the IP address of the bot.")
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("OK") { dialog, which ->
+                    navigateToSettings(this@BotFragment.requireView())
+                }.show()
+        } else {
+            SandBotRepository.getInstance().createNewConnection(serverIp)
+            runTask = true
+        }
     }
 
     override fun onCreateView(
@@ -93,14 +148,15 @@ class BotFragment : Fragment() {
         binding.controlsCard.commandHome.setOnClickListener {
             SandBotRepository.getInstance().home()
         }
-
         subscribeUi(binding)
         return binding.root
     }
 
     override fun onResume() {
         super.onResume()
-        mainHandler.post(refreshStatusTask)
+        if (runTask) {
+            mainHandler.post(refreshStatusTask)
+        }
     }
 
     override fun onPause() {
@@ -111,6 +167,7 @@ class BotFragment : Fragment() {
     private fun subscribeUi(binding: FragmentBotBinding) {
         // Listen for the file list to set the storage information
         viewModel.fileListResult.observe(viewLifecycleOwner) { result ->
+            Log.d(TAG, "File List Result")
             // storage card
             binding.storageCard.storageText.text = String.format(
                 Locale.US,
@@ -123,9 +180,34 @@ class BotFragment : Fragment() {
 
         }
 
+        val connectedObserver = Observer<Boolean> { connected ->
+            Log.d(TAG, "Connected changed: " + connected)
+            if (!connected) {
+                binding.statusCard.status_state_text.text =
+                    resources.getText(R.string.state_disconnected)
+                binding.statusCard.status_state_text.setBackgroundColor(resources.getColor(R.color.red_error))
+                binding.ledCard.ledSwitch.isEnabled = false
+                binding.ledCard.ledBrightnessSeekBar.isEnabled = false
+                binding.statusCard.status_num_ops.text = "0"
+                // storage card
+                binding.storageCard.storageText.text = String.format(
+                    Locale.US,
+                    resources.getString(R.string.disk_usage),
+                    humanReadableByteCount(0, true),
+                    humanReadableByteCount(0, true)
+                )
+            } else {
+            }
+        }
+
+        SandBotRepository.getInstance().connected.observe(viewLifecycleOwner, connectedObserver)
+
         // Listen for the status to set the led and status information
         viewModel.botStatus.observe(viewLifecycleOwner) { result ->
+
             // led card
+            binding.ledCard.ledSwitch.isEnabled = true
+            binding.ledCard.ledBrightnessSeekBar.isEnabled = true
             binding.ledCard.ledSwitch.setOnCheckedChangeListener(null)
             binding.ledCard.ledSwitch.isChecked = result.ledOn == 1
             binding.ledCard.ledSwitch.setOnCheckedChangeListener(switchHandler)
@@ -149,6 +231,7 @@ class BotFragment : Fragment() {
                 }
 
             }
+
         }
     }
 
@@ -158,5 +241,13 @@ class BotFragment : Fragment() {
         val exp = (Math.log(bytes.toDouble()) / Math.log(unit.toDouble())).toInt()
         val pre = (if (si) "kMGTPE" else "KMGTPE")[exp - 1] + if (si) "" else "i"
         return String.format("%.1f %sB", bytes / Math.pow(unit.toDouble(), exp.toDouble()), pre)
+    }
+
+    private fun navigateToSettings(
+        view: View
+    ) {
+        val direction =
+            SandBotViewPagerFragmentDirections.actionHomeViewPagerFragmentToSettingsFragment()
+        view.findNavController().navigate(direction)
     }
 }

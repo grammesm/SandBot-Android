@@ -31,11 +31,6 @@ class FilesFragment : Fragment() {
         binding = FragmentFilesBinding.inflate(inflater, container, false)
         val adapter = FileAdapter()
         binding.fileList.adapter = adapter
-//
-//        binding.addPlant.setOnClickListener {
-//            navigateToPlantListPage()
-//        }
-//
         subscribeUi(adapter, binding)
         return binding.root
     }

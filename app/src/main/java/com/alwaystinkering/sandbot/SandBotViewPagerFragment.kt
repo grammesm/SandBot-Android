@@ -1,28 +1,39 @@
 package com.alwaystinkering.sandbot
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.alwaystinkering.sandbot.adapters.BOT_PAGE_INDEX
 import com.alwaystinkering.sandbot.adapters.FILES_PAGE_INDEX
 import com.alwaystinkering.sandbot.adapters.SandBotPagerAdapter
 import com.alwaystinkering.sandbot.databinding.FragmentViewPagerBinding
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.android.synthetic.main.card_led.*
 
 
 class SandBotViewPagerFragment : Fragment() {
+
+    lateinit var binding: FragmentViewPagerBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentViewPagerBinding.inflate(inflater, container, false)
+        binding = FragmentViewPagerBinding.inflate(inflater, container, false)
         val tabLayout = binding.tabs
         val viewPager = binding.viewPager
+
+        val titleText = binding.toolbarText
+
+        (activity as AppCompatActivity?)!!.setSupportActionBar(binding.toolbar)
+        titleText.setOnTouchListener(View.OnTouchListener { view, motionEvent ->
+            if (motionEvent.getRawX() >= titleText.getRight() - titleText.getTotalPaddingRight()) navigateToSettings(view)
+            return@OnTouchListener true
+        })
 
         viewPager.adapter = SandBotPagerAdapter(this)
 
@@ -37,13 +48,25 @@ class SandBotViewPagerFragment : Fragment() {
         return binding.root
     }
 
-//    private fun getTabIcon(position: Int): Int {
-//        return when (position) {
-//            BOT_PAGE_INDEX -> R.drawable.garden_tab_selector
-//            FILES_PAGE_INDEX-> R.drawable.plant_list_tab_selector
-//            else -> throw IndexOutOfBoundsException()
-//        }
-//    }
+    private fun navigateToSettings(
+        view: View
+    ) {
+        val direction =
+            SandBotViewPagerFragmentDirections.actionHomeViewPagerFragmentToSettingsFragment()
+        view.findNavController().navigate(direction)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.main, menu);
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId ){
+            R.id.menu_settings -> navigateToSettings(item.actionView)
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     private fun getTabTitle(position: Int): String? {
         return when (position) {
