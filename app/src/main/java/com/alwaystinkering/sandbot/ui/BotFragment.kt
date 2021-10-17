@@ -24,10 +24,6 @@ import com.alwaystinkering.sandbot.data.SandBotRepository
 import com.alwaystinkering.sandbot.databinding.FragmentBotBinding
 import com.alwaystinkering.sandbot.utils.InjectorUtils
 import com.alwaystinkering.sandbot.viewmodels.BotViewModel
-import kotlinx.android.synthetic.main.card_controls.view.*
-import kotlinx.android.synthetic.main.card_led.view.*
-import kotlinx.android.synthetic.main.card_status.view.*
-import kotlinx.android.synthetic.main.card_storage.view.*
 import java.util.*
 
 class BotFragment : Fragment() {
@@ -183,12 +179,12 @@ class BotFragment : Fragment() {
         val connectedObserver = Observer<Boolean> { connected ->
             Log.d(TAG, "Connected changed: " + connected)
             if (!connected) {
-                binding.statusCard.status_state_text.text =
+                binding.statusCard.statusStateText.text =
                     resources.getText(R.string.state_disconnected)
-                binding.statusCard.status_state_text.setBackgroundColor(resources.getColor(R.color.red_error))
+                binding.statusCard.statusStateText.setBackgroundColor(resources.getColor(R.color.red_error))
                 binding.ledCard.ledSwitch.isEnabled = false
                 binding.ledCard.ledBrightnessSeekBar.isEnabled = false
-                binding.statusCard.status_num_ops.text = "0"
+                binding.statusCard.statusNumOps.text = "0"
                 // storage card
                 binding.storageCard.storageText.text = String.format(
                     Locale.US,
@@ -218,17 +214,17 @@ class BotFragment : Fragment() {
             }
 
             // status card
-            binding.statusCard.status_num_ops.text = result.qd.toString()
+            binding.statusCard.statusNumOps.text = result.qd.toString()
             when (result.qd) {
                 0 -> {
-                    binding.statusCard.status_state_text.text =
+                    binding.statusCard.statusStateText.text =
                         resources.getText(R.string.state_idle)
-                    binding.statusCard.status_state_text.setBackgroundColor(resources.getColor(R.color.orange_idle))
+                    binding.statusCard.statusStateText.setBackgroundColor(resources.getColor(R.color.orange_idle))
                 }
                 else -> {
-                    binding.statusCard.status_state_text.text =
+                    binding.statusCard.statusStateText.text =
                         resources.getText(R.string.state_running)
-                    binding.statusCard.status_state_text.setBackgroundColor(resources.getColor(R.color.green_running))
+                    binding.statusCard.statusStateText.setBackgroundColor(resources.getColor(R.color.green_running))
                 }
 
             }

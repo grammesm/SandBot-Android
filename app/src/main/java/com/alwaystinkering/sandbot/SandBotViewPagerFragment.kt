@@ -5,13 +5,11 @@ import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import androidx.navigation.ui.setupWithNavController
 import com.alwaystinkering.sandbot.adapters.BOT_PAGE_INDEX
 import com.alwaystinkering.sandbot.adapters.FILES_PAGE_INDEX
 import com.alwaystinkering.sandbot.adapters.SandBotPagerAdapter
 import com.alwaystinkering.sandbot.databinding.FragmentViewPagerBinding
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.android.synthetic.main.card_led.*
 
 
 class SandBotViewPagerFragment : Fragment() {
