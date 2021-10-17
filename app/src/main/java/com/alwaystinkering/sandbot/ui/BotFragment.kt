@@ -197,6 +197,7 @@ class BotFragment : Fragment() {
                     humanReadableByteCount(0, true)
                 )
             } else {
+                viewModel.fileListResult.refresh()
             }
         }
 

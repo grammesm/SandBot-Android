@@ -12,6 +12,6 @@ class BotViewModel internal constructor(
 ) : ViewModel() {
     val botStatus: RefreshLiveData<BotStatus> =
         sandBotRepository.getStatus()
-    val fileListResult: LiveData<FileListResult> =
+    val fileListResult: RefreshLiveData<FileListResult> =
         sandBotRepository.getFileListResult()
 }

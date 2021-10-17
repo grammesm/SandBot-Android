@@ -25,41 +25,15 @@ class SandBotRepository private constructor() {
 
     fun createNewConnection(ip: String) {
         connected.value = false
-    //    statusCallback?.cancel()
         Log.i(TAG, "Creating SandBot connection to $ip")
         api = RetrofitService.createService(ip)
     }
 
-    //var statusCallback: CancellableCallback<BotStatus>? = null
-
     fun getStatus(): RefreshLiveData<BotStatus> {
-//
-//        val retroCallback: Callback<BotStatus> = object: Callback<BotStatus> {
-//            override fun onResponse(call: Call<BotStatus>, response: Response<BotStatus>) {
-//                if (response.isSuccessful) {
-//                    connected.value = true
-//                    lastStatus = response.body()!!
-//                    Log.d(TAG, "BotStatus: " + response.body())
-//                    //callback.onDataLoaded(response.body())
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<BotStatus>, t: Throwable) {
-//                connected.value = false;
-//                Log.e(TAG, "Status Failure: ${t.localizedMessage}")
-//            }
-//        }
-//
-//        val cancellableCallback = CancellableCallback(retroCallback)
-//        statusCallback = cancellableCallback;
-//
-//        return RefreshLiveData { callback ->
-//            api.getStatus().enqueue(cancellableCallback)
-//        }
         Log.d(TAG, "getStatus")
 
         return RefreshLiveData { callback ->
-            api.getStatus().enqueue(object: Callback<BotStatus> {
+            api.getStatus().enqueue(object : Callback<BotStatus> {
                 override fun onResponse(call: Call<BotStatus>, response: Response<BotStatus>) {
                     if (response.isSuccessful) {
                         if (connected.value == false) {
@@ -81,9 +55,8 @@ class SandBotRepository private constructor() {
         }
     }
 
-    fun getFileListResult(): MutableLiveData<FileListResult> {
-        val fileListResult = MutableLiveData<FileListResult>()
-        if (connected.value!!) {
+    fun getFileListResult(): RefreshLiveData<FileListResult> {
+        return RefreshLiveData { callback ->
             api.listFiles().enqueue(object : Callback<FileListResult> {
                 override fun onFailure(call: Call<FileListResult>, t: Throwable) {
                     Log.e(TAG, "File List Result Failure: ${t.localizedMessage}")
@@ -94,13 +67,11 @@ class SandBotRepository private constructor() {
                     response: Response<FileListResult>
                 ) {
                     if (response.isSuccessful) {
-                        fileListResult.value = response.body()
+                        callback.onDataLoaded(response.body())
                     }
                 }
-
             })
         }
-        return fileListResult
     }
 
     fun getFileList(): MutableLiveData<List<AbstractPattern>> {
