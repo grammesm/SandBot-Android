@@ -49,11 +49,13 @@
                 android:id="@+id/ledSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:paddingBottom="0dp"
-                android:paddingTop="0dp"/>
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp" />
+
             <SeekBar
                 android:id="@+id/ledBrightnessSeekBar"
                 android:layout_width="0dip"
+                android:max="255"
                 android:layout_height="match_parent"
                 android:layout_weight="0.74" />
 
@@ -69,7 +71,8 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_margin="4dp"
-                android:src="@drawable/brightness_auto" />
+                android:src="@drawable/brightness_auto"
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

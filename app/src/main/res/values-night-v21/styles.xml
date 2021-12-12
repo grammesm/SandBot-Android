@@ -1,7 +1,0 @@
-<resources>
-
-    <style name="Theme.SandBot" parent="Base.Theme.SandBot">
-        <item name="android:windowTranslucentStatus">true</item>
-    </style>
-
-</resources>

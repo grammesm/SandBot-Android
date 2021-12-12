@@ -1,6 +1,6 @@
 package com.alwaystinkering.sandbot.model.pattern
 
-import java.util.Locale
+import java.util.*
 
 class Coordinate(val x: Float, val y: Float) {
 

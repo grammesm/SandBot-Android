@@ -1,6 +1,6 @@
 package com.alwaystinkering.sandbot.model
 
-import com.alwaystinkering.sandbot.data.BotStatus
+import com.alwaystinkering.sandbot.api.BotStatus
 
 class LedState(status: BotStatus) {
 

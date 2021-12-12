@@ -1,28 +1,33 @@
 package com.alwaystinkering.sandbot.model.pattern;
 
-import com.alwaystinkering.sandbot.data.SandBotFile;
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class SequencePattern extends AbstractPattern {
     private static final String TAG = "ParametricPattern";
+
+    private List<String> sequenceContents;
 
     public SequencePattern(String name) {
         super(name, FileType.SEQUENCE);
     }
 
+    public SequencePattern(String name, String contents) {
+        super(name, FileType.SEQUENCE);
+        this.sequenceContents = Arrays.asList(contents.split(Pattern.quote("\n")));
+    }
 
-    @Override
-    public boolean processSandbotFile(SandBotFile file) {
-        return false;
+    public List<String> getSequenceContents() {
+        return sequenceContents;
+    }
+
+    public void setSequenceContents(List<String> sequenceContents) {
+        this.sequenceContents = sequenceContents;
     }
 
     @Override
     public Coordinate processNextEvaluation(int tableDiameter) {
-//        for (ExpressionContainer exp : expToEval) {
-//            Log.d(TAG, "Exp validation: " + exp.getExpression().validate(false).isValid() + ":" + exp.getExpression().validate(false).getErrors());
-//            runningParamToValue.put(exp.getVar(), exp.getExpression().setVariables(runningParamToValue).evaluate());
-//        }
-//        Log.d(TAG, "result: " + runningParamToValue.toString());
-//        return new Coordinate(runningParamToValue.get("x").floatValue(), runningParamToValue.get("y").floatValue());
         return null;
     }
 
@@ -33,7 +38,6 @@ public class SequencePattern extends AbstractPattern {
 
     @Override
     public void reset() {
-
     }
 
     @Override

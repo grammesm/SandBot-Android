@@ -2,8 +2,6 @@ package com.alwaystinkering.sandbot.model.pattern;
 
 import android.util.Log;
 
-import com.alwaystinkering.sandbot.data.SandBotFile;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -110,11 +108,6 @@ public class ThetaRhoPattern extends AbstractPattern {
     @Override
     public void reset() {
         lineCount = 0;
-    }
-
-    @Override
-    public boolean processSandbotFile(SandBotFile file) {
-        return false;
     }
 
     @Override

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.MainActivity"
+    tools:ignore="MergeRootFrame">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/headerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/sequenceNameLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="6dp"
+                android:text="Name:" />
+
+            <EditText
+                android:id="@+id/sequenceName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="6dp"
+                android:layout_toEndOf="@id/sequenceNameLabel"
+                android:minEms="10" />
+
+            <Button
+                android:id="@+id/saveButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:drawableEnd="@drawable/content_save"
+                android:text="save"
+                android:textSize="10dp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/listLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/buttonLayout"
+            android:layout_below="@id/headerLayout"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Playlist" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/sequenceList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:context=".SandBotActivity"
+                    tools:listitem="@layout/card_sequence_item" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Available Patterns" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/filesList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:context=".SandBotActivity"
+                    tools:listitem="@layout/card_sequence_file" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/buttonLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/sequenceRepeatButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="2dp"
+                android:drawableLeft="@drawable/drag"
+                android:drawablePadding="0dp"
+                android:gravity=""
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"
+                android:tag="RepeatMode"
+                android:text="Repeat"
+                android:textSize="10dp" />
+
+            <Button
+                android:id="@+id/sequenceNoRepeatButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="2dp"
+                android:drawableLeft="@drawable/drag"
+                android:drawablePadding="0dp"
+                android:gravity=""
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"
+                android:tag="NoRepeatMode"
+                android:text="NoRepeat"
+                android:textSize="10dp" />
+
+            <Button
+                android:id="@+id/sequenceShuffleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="2dp"
+                android:drawableLeft="@drawable/drag"
+                android:drawablePadding="0dp"
+                android:gravity=""
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"
+                android:tag="ShuffleMode"
+                android:text="Shuffle"
+                android:textSize="10dp" />
+
+            <Button
+                android:id="@+id/sequenceNoShuffleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/drag"
+                android:drawablePadding="0dp"
+                android:gravity=""
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"
+                android:tag="NoShuffleMode"
+                android:text="NoShuffle"
+                android:textSize="10dp" />
+        </LinearLayout>
+    </RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

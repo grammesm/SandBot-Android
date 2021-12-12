@@ -2,8 +2,6 @@ package com.alwaystinkering.sandbot.model.pattern;
 
 import androidx.annotation.Nullable;
 
-import com.alwaystinkering.sandbot.data.SandBotFile;
-
 import java.io.Serializable;
 
 public abstract class AbstractPattern implements Serializable {
@@ -13,13 +11,11 @@ public abstract class AbstractPattern implements Serializable {
     protected String name;
     protected FileType fileType = FileType.PARAM;
     protected int size = 0;
-    protected boolean loaded = false;
 
-    public abstract Coordinate processNextEvaluation(int tableDiameter);
-    public abstract boolean isStopped();
-    public abstract void reset();
-    public abstract boolean processSandbotFile(SandBotFile file);
-    public abstract boolean validate(int tableDiameter);
+    public Coordinate processNextEvaluation(int tableDiameter) { return null;}
+    public boolean isStopped() { return false;}
+    public void reset() {}
+    public boolean validate(int tableDiameter) { return false;}
     public String getName() {
         return name;
     }
@@ -46,14 +42,6 @@ public abstract class AbstractPattern implements Serializable {
 
     public void setSize(int size) {
         this.size = size;
-    }
-
-    public boolean isLoaded() {
-        return loaded;
-    }
-
-    public void setLoaded(boolean loaded) {
-        this.loaded = loaded;
     }
 
     @Override

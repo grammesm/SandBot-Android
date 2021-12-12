@@ -1,31 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph"
-    app:startDestination="@id/homeViewPagerFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment">
 
     <fragment
-        android:id="@+id/homeViewPagerFragment"
-        android:name="com.alwaystinkering.sandbot.SandBotViewPagerFragment"
-        android:label="HomeViewPagerFragment" >
+        android:id="@+id/mainFragment"
+        android:name="com.alwaystinkering.sandbot.ui.main.MainFragment"
+        android:label="main_fragment"
+        tools:layout="@layout/fragment_main" >
         <action
-            android:id="@+id/action_homeViewPagerFragment_to_patternPreviewFragment"
-            app:destination="@id/patternPreviewFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-        <action
-            android:id="@+id/action_homeViewPagerFragment_to_settingsFragment"
+            android:id="@+id/action_mainFragment_to_settingsFragment"
             app:destination="@id/settingsFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.alwaystinkering.sandbot.ui.settings.SettingsFragment"
+        android:label="SettingsFragment" />
+    <fragment
+        android:id="@+id/patternsFragment"
+        android:name="com.alwaystinkering.sandbot.ui.patterns.PatternsFragment"
+        android:label="PatternsFragment" >
+        <action
+            android:id="@+id/action_patternsFragment_to_patternPreviewFragment"
+            app:destination="@id/patternPreviewFragment"
+            app:popUpTo="@id/patternsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/playlistsFragment"
+        android:name="com.alwaystinkering.sandbot.ui.playlists.PlaylistsFragment"
+        android:label="PatternsFragment" >
+        <action
+            android:id="@+id/action_playlistsFragment_to_sequenceEditFragment"
+            app:destination="@id/sequenceEditFragment"
+            app:popUpTo="@id/playlistsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <!--Global action-->
+    <action android:id="@+id/open_settings_fragment"
+        app:destination="@id/settingsFragment"/>
+    <fragment
         android:id="@+id/patternPreviewFragment"
-        android:name="com.alwaystinkering.sandbot.ui.PatternPreviewFragment"
-        android:label="PatternPreviewFragment" >
+        android:name="com.alwaystinkering.sandbot.ui.preview.PatternPreviewFragment"
+        android:label="PatternPreviewFragment">
         <argument
             android:name="filename"
             app:argType="string" />
@@ -34,8 +65,15 @@
             app:argType="com.alwaystinkering.sandbot.model.pattern.FileType" />
     </fragment>
     <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.alwaystinkering.sandbot.settings.SettingsFragment"
-        android:label="SettingsFragment" >
+        android:id="@+id/sequenceEditFragment"
+        android:name="com.alwaystinkering.sandbot.ui.playlistedit.SequenceEditFragment"
+        android:label="SequenceEditFragment">
+        <argument
+            android:name="filename"
+            app:argType="string" />
+        <argument
+            android:name="filetype"
+            app:argType="com.alwaystinkering.sandbot.model.pattern.FileType" />
     </fragment>
+
 </navigation>

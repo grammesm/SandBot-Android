@@ -2,24 +2,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:title="SandBot Settings"
+        android:title="Sandbot Settings"
         />
     <EditTextPreference
         android:defaultValue="@string/pref_server_default"
         android:inputType="number|numberDecimal"
-        android:key="@string/pref_server_key"
+        android:key="@string/pref_key_server_ip"
         android:maxLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
+        app:useSimpleSummaryProvider="true"
         android:title="@string/pref_server_title"
         android:summary="@string/pref_server_summary"/>
+
+    <PreferenceCategory
+        android:title="Pattern Preview Settings"
+        />
 
     <EditTextPreference
         android:defaultValue="@string/pref_diameter_default"
         android:inputType="number|numberSigned"
-        android:key="@string/pref_diameter_key"
+        android:key="@string/pref_key_diameter"
         android:maxLines="1"
         android:selectAllOnFocus="true"
+        app:useSimpleSummaryProvider="true"
         android:singleLine="true"
         android:title="@string/pref_diameter_title"
         android:summary="@string/pref_diameter_summary" />

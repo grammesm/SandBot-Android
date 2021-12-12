@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="3dp"
+    app:cardElevation="3dp"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:background="@color/sandbot_sand_dark"
+        android:paddingStart="2dp"
+        android:paddingTop="3dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="3dp">
+
+        <ImageView
+            android:id="@+id/patternIcon"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingTop="5dp"
+            android:src="@drawable/spiral"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/patternName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="6dp"
+            android:layout_toEndOf="@id/patternIcon"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            tools:text="PatternName" />
+
+        <ImageView
+            android:id="@+id/patternRun"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:layout_toStartOf="@id/patternRunSim"
+            android:src="@drawable/play" />
+
+        <ImageView
+            android:id="@+id/patternRunSim"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:layout_toStartOf="@id/patternDelete"
+            android:src="@drawable/launch" />
+
+
+        <!--            <ImageView-->
+        <!--                android:id="@+id/patternEdit"-->
+        <!--                android:layout_width="30dp"-->
+        <!--                android:layout_height="30dp"-->
+        <!--                android:layout_centerVertical="true"-->
+        <!--                android:layout_marginEnd="8dp"-->
+        <!--                android:layout_marginRight="8dp"-->
+        <!--                android:layout_toStartOf="@id/patternDelete"-->
+        <!--                android:layout_toLeftOf="@id/patternDelete"-->
+        <!--                android:src="@drawable/circle_edit_outline" />-->
+
+        <ImageView
+            android:id="@+id/patternDelete"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/delete" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
+

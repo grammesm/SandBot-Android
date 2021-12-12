@@ -2,8 +2,6 @@ package com.alwaystinkering.sandbot.model.pattern;
 
 import android.util.Log;
 
-import com.alwaystinkering.sandbot.data.SandBotFile;
-
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import net.objecthunter.exp4j.ValidationResult;
@@ -67,11 +65,6 @@ public class ParametricPattern extends AbstractPattern {
     public void reset() {
         runningParamToValue.clear();
         runningParamToValue.putAll(paramToValue);
-    }
-
-    @Override
-    public boolean processSandbotFile(SandBotFile file) {
-        return false;
     }
 
     @Override
