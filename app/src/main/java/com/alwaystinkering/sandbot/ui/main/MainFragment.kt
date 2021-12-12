@@ -111,6 +111,7 @@ class MainFragment : Fragment() {
     // LED Switch handler
     private val switchHandler =
         CompoundButton.OnCheckedChangeListener { compoundButton, isChecked ->
+            ledBrightnessSeekBar.isEnabled = isChecked
             sandbotRepository.writeLedOnOff(isChecked)
         }
 
@@ -180,6 +181,7 @@ class MainFragment : Fragment() {
 
         ledSwitch.setOnCheckedChangeListener(null)
         ledSwitch.isChecked = botStatus.ledOn == 1
+        ledBrightnessSeekBar.isEnabled = ledSwitch.isChecked
         ledSwitch.setOnCheckedChangeListener(switchHandler)
 
         if (!dontSetSeekbar) {
@@ -203,8 +205,8 @@ class MainFragment : Fragment() {
     }
 
     private fun setControlsEnabled(enabled: Boolean) {
-        ledBrightnessSeekBar.isEnabled = enabled
         ledSwitch.isEnabled = enabled
+        ledBrightnessSeekBar.isEnabled = enabled && ledSwitch.isChecked
         commandPlay.isEnabled = enabled
         commandHome.isEnabled = enabled
         commandPause.isEnabled = enabled

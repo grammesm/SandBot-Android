@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".ui.MainActivity"
+    android:layout_marginStart="2dp"
+    android:layout_marginEnd="2dp"
     tools:ignore="MergeRootFrame">
 
     <RelativeLayout
@@ -68,6 +70,7 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/sequenceList"
+                    android:background="@drawable/list_normal_bg"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:clipToPadding="false"
@@ -106,62 +109,42 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:gravity="center"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
             android:orientation="horizontal">
 
-            <Button
+            <include layout="@layout/tag_playlist"
                 android:id="@+id/sequenceRepeatButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="2dp"
-                android:drawableLeft="@drawable/drag"
-                android:drawablePadding="0dp"
-                android:gravity=""
-                android:paddingStart="0dp"
-                android:paddingEnd="0dp"
-                android:tag="RepeatMode"
-                android:text="Repeat"
-                android:textSize="10dp" />
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"/>
 
-            <Button
+            <include layout="@layout/tag_playlist"
                 android:id="@+id/sequenceNoRepeatButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="2dp"
-                android:drawableLeft="@drawable/drag"
-                android:drawablePadding="0dp"
-                android:gravity=""
-                android:paddingStart="0dp"
-                android:paddingEnd="0dp"
-                android:tag="NoRepeatMode"
-                android:text="NoRepeat"
-                android:textSize="10dp" />
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"/>
 
-            <Button
+            <include layout="@layout/tag_playlist"
                 android:id="@+id/sequenceShuffleButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="2dp"
-                android:drawableLeft="@drawable/drag"
-                android:drawablePadding="0dp"
-                android:gravity=""
-                android:paddingStart="0dp"
-                android:paddingEnd="0dp"
-                android:tag="ShuffleMode"
-                android:text="Shuffle"
-                android:textSize="10dp" />
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"/>
 
-            <Button
+            <include layout="@layout/tag_playlist"
                 android:id="@+id/sequenceNoShuffleButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/drag"
-                android:drawablePadding="0dp"
-                android:gravity=""
-                android:paddingStart="0dp"
-                android:paddingEnd="0dp"
-                android:tag="NoShuffleMode"
-                android:text="NoShuffle"
-                android:textSize="10dp" />
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"/>
+
         </LinearLayout>
     </RelativeLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

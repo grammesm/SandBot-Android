@@ -1,17 +1,27 @@
 <resources>
     <string name="app_name">SandBot</string>
 
+    <!-- Navigation -->
     <string name="menu_main">Home</string>
     <string name="menu_patterns">Patterns</string>
     <string name="menu_playlists">Playlists</string>
     <string name="menu_settings">Settings</string>
 
-
+    <!-- Home -->
     <string name="state_disconnected">DISCONNECTED</string>
     <string name="state_idle">IDLE</string>
     <string name="state_running">RUNNING</string>
-
     <string name="disk_usage">%s/%s</string>
+
+    <!-- Playlist Edit -->
+    <string name="repeat_button_text">START REPEAT</string>
+    <string name="repeat_entry">RepeatMode</string>
+    <string name="repeat_end_button_text">END REPEAT</string>
+    <string name="repeat_end_entry">NoRepeatMode</string>
+    <string name="shuffle_button_text">START SHUFFLE</string>
+    <string name="shuffle_entry">ShuffleMode</string>
+    <string name="shuffle_end_button_text">END SHUFFLE</string>
+    <string name="shuffle_end_entry">NoShuffleMode</string>
 
 
     <!--Prefs-->

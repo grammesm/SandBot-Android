@@ -25,8 +25,11 @@ import com.alwaystinkering.sandbot.model.pattern.SequencePattern
 import com.alwaystinkering.sandbot.repo.SandbotRepository
 import com.alwaystinkering.sandbot.ui.MainActivity
 import kotlinx.android.synthetic.main.fragment_sequence_edit.*
+import kotlinx.android.synthetic.main.tag_playlist.view.*
+import java.util.*
 import java.util.stream.Collectors
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 class SequenceEditFragment : Fragment() {
 
@@ -66,25 +69,34 @@ class SequenceEditFragment : Fragment() {
                 AlertDialog.Builder(it.context)
                     .setTitle("Playlist Error")
                     .setMessage("Playlist name can not be blank")
+                    .setPositiveButton("OK", null)
                     .show()
             }
         }
 
+        sequenceRepeatButton.text.text = requireContext().getString(R.string.repeat_button_text)
+        sequenceRepeatButton.tag = requireContext().getString(R.string.repeat_entry)
         sequenceRepeatButton.setOnLongClickListener {
             val data = ClipData.newPlainText("", "")
             val shadowBuilder = View.DragShadowBuilder(it)
             it.startDragAndDrop(data, shadowBuilder, it, 0)
         }
+        sequenceNoRepeatButton.text.text = requireContext().getString(R.string.repeat_end_button_text)
+        sequenceNoRepeatButton.tag = requireContext().getString(R.string.repeat_end_entry)
         sequenceNoRepeatButton.setOnLongClickListener {
             val data = ClipData.newPlainText("", "")
             val shadowBuilder = View.DragShadowBuilder(it)
             it.startDragAndDrop(data, shadowBuilder, it, 0)
         }
+        sequenceShuffleButton.text.text = requireContext().getString(R.string.shuffle_button_text)
+        sequenceShuffleButton.tag = requireContext().getString(R.string.shuffle_entry)
         sequenceShuffleButton.setOnLongClickListener {
             val data = ClipData.newPlainText("", "")
             val shadowBuilder = View.DragShadowBuilder(it)
             it.startDragAndDrop(data, shadowBuilder, it, 0)
         }
+        sequenceNoShuffleButton.text.text = requireContext().getString(R.string.shuffle_end_button_text)
+        sequenceNoShuffleButton.tag = requireContext().getString(R.string.shuffle_end_entry)
         sequenceNoShuffleButton.setOnLongClickListener {
             val data = ClipData.newPlainText("", "")
             val shadowBuilder = View.DragShadowBuilder(it)
@@ -123,10 +135,20 @@ class SequenceEditFragment : Fragment() {
                             Log.d("Drop", "Button source")
                             item = viewSource.tag as String
                         }
+                        is PlaylistTag -> {
+                            Log.d("Drop", "PlaylistTag source")
+                            item = viewSource.tag as String
+                        }
                     }
                     adapter.addItem(item)
                     adapter.notifyItemInserted(adapter.dataSet.size - 1)
                 }
+                DragEvent.ACTION_DRAG_ENTERED ->
+                    sequenceList.setBackgroundResource(R.drawable.list_highlighted_bg)
+                DragEvent.ACTION_DRAG_ENDED ->
+                    sequenceList.setBackgroundResource(R.drawable.list_normal_bg)
+                DragEvent.ACTION_DRAG_EXITED ->
+                    sequenceList.setBackgroundResource(R.drawable.list_normal_bg)
             }
             true
         }
@@ -170,12 +192,12 @@ class SequenceEditFragment : Fragment() {
                 result.stream().map(AbstractPattern::getName).collect(Collectors.toList())
                     .toString()
             )
-            filesList.adapter = SequenceFileAdapter(
-                result.stream()
-                    .filter { pattern -> pattern.fileType != FileType.SEQUENCE }
-                    .map(AbstractPattern::getName)
-                    .collect(Collectors.toList())
-            )
+            val fileList = result.stream()
+                .filter { pattern -> pattern.fileType != FileType.SEQUENCE }
+                .map(AbstractPattern::getName)
+                .collect(Collectors.toList())
+            fileList.sortBy { item -> item.toLowerCase(Locale.getDefault()) }
+            filesList.adapter = SequenceFileAdapter(fileList)
         }
     }
 

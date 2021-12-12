@@ -181,6 +181,7 @@ class SandbotRepository @Inject constructor(
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
                     Log.d(TAG, "LED Config Write Success")
+                    getStatus()
                 }
             }
         })
