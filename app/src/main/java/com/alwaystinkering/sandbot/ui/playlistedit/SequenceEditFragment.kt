@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.RelativeLayout
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.observe
@@ -19,13 +20,13 @@ import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.RecyclerView
 import com.alwaystinkering.sandbot.App
 import com.alwaystinkering.sandbot.R
+import com.alwaystinkering.sandbot.databinding.FragmentSequenceEditBinding
+import com.alwaystinkering.sandbot.databinding.TagPlaylistBinding
 import com.alwaystinkering.sandbot.model.pattern.AbstractPattern
 import com.alwaystinkering.sandbot.model.pattern.FileType
 import com.alwaystinkering.sandbot.model.pattern.SequencePattern
 import com.alwaystinkering.sandbot.repo.SandbotRepository
 import com.alwaystinkering.sandbot.ui.MainActivity
-import kotlinx.android.synthetic.main.fragment_sequence_edit.*
-import kotlinx.android.synthetic.main.tag_playlist.view.*
 import java.util.*
 import java.util.stream.Collectors
 import javax.inject.Inject
@@ -43,6 +44,10 @@ class SequenceEditFragment : Fragment() {
     lateinit var sandbotRepository: SandbotRepository
     lateinit var pattern: AbstractPattern
 
+    private var _binding: FragmentSequenceEditBinding? = null
+    private val binding get() = _binding!!
+
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         ((activity as MainActivity).application as App).appComponent.inject(this)
@@ -53,17 +58,18 @@ class SequenceEditFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_sequence_edit, container, false)
+        _binding = FragmentSequenceEditBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        saveButton.setOnClickListener {
-            val newName = sequenceName.text.toString().trim()
+        binding.saveButton.setOnClickListener {
+            val newName = binding.sequenceName.text.toString().trim()
             if (newName.isNotEmpty()) {
                 pattern.name = newName + "." + pattern.fileType?.extension
-                (pattern as SequencePattern).sequenceContents = (sequenceList.adapter as SequenceItemAdapter).dataSet
+                (pattern as SequencePattern).sequenceContents = (binding.sequenceList.adapter as SequenceItemAdapter).dataSet
                 sandbotRepository.saveFile(pattern as SequencePattern)
             } else {
                 AlertDialog.Builder(it.context)
@@ -74,36 +80,36 @@ class SequenceEditFragment : Fragment() {
             }
         }
 
-        sequenceRepeatButton.text.text = requireContext().getString(R.string.repeat_button_text)
-        sequenceRepeatButton.tag = requireContext().getString(R.string.repeat_entry)
-        sequenceRepeatButton.setOnLongClickListener {
+        binding.sequenceRepeatButton.text.text = requireContext().getString(R.string.repeat_button_text)
+        binding.sequenceRepeatButton.root.tag = requireContext().getString(R.string.repeat_entry)
+        binding.sequenceRepeatButton.root.setOnLongClickListener {
             val data = ClipData.newPlainText("", "")
             val shadowBuilder = View.DragShadowBuilder(it)
             it.startDragAndDrop(data, shadowBuilder, it, 0)
         }
-        sequenceNoRepeatButton.text.text = requireContext().getString(R.string.repeat_end_button_text)
-        sequenceNoRepeatButton.tag = requireContext().getString(R.string.repeat_end_entry)
-        sequenceNoRepeatButton.setOnLongClickListener {
+        binding.sequenceNoRepeatButton.text.text = requireContext().getString(R.string.repeat_end_button_text)
+        binding.sequenceNoRepeatButton.root.tag = requireContext().getString(R.string.repeat_end_entry)
+        binding.sequenceNoRepeatButton.root.setOnLongClickListener {
             val data = ClipData.newPlainText("", "")
             val shadowBuilder = View.DragShadowBuilder(it)
             it.startDragAndDrop(data, shadowBuilder, it, 0)
         }
-        sequenceShuffleButton.text.text = requireContext().getString(R.string.shuffle_button_text)
-        sequenceShuffleButton.tag = requireContext().getString(R.string.shuffle_entry)
-        sequenceShuffleButton.setOnLongClickListener {
+        binding.sequenceShuffleButton.text.text = requireContext().getString(R.string.shuffle_button_text)
+        binding.sequenceShuffleButton.root.tag = requireContext().getString(R.string.shuffle_entry)
+        binding.sequenceShuffleButton.root.setOnLongClickListener {
             val data = ClipData.newPlainText("", "")
             val shadowBuilder = View.DragShadowBuilder(it)
             it.startDragAndDrop(data, shadowBuilder, it, 0)
         }
-        sequenceNoShuffleButton.text.text = requireContext().getString(R.string.shuffle_end_button_text)
-        sequenceNoShuffleButton.tag = requireContext().getString(R.string.shuffle_end_entry)
-        sequenceNoShuffleButton.setOnLongClickListener {
+        binding.sequenceNoShuffleButton.text.text = requireContext().getString(R.string.shuffle_end_button_text)
+        binding.sequenceNoShuffleButton.root.tag = requireContext().getString(R.string.shuffle_end_entry)
+        binding.sequenceNoShuffleButton.root.setOnLongClickListener {
             val data = ClipData.newPlainText("", "")
             val shadowBuilder = View.DragShadowBuilder(it)
             it.startDragAndDrop(data, shadowBuilder, it, 0)
         }
 
-        sequenceList.setOnDragListener { v, event ->
+        binding.sequenceList.setOnDragListener { v, event ->
             when (event.action) {
                 DragEvent.ACTION_DROP -> {
                     val viewSource = event.localState as View
@@ -144,11 +150,11 @@ class SequenceEditFragment : Fragment() {
                     adapter.notifyItemInserted(adapter.dataSet.size - 1)
                 }
                 DragEvent.ACTION_DRAG_ENTERED ->
-                    sequenceList.setBackgroundResource(R.drawable.list_highlighted_bg)
+                    binding.sequenceList.setBackgroundResource(R.drawable.list_highlighted_bg)
                 DragEvent.ACTION_DRAG_ENDED ->
-                    sequenceList.setBackgroundResource(R.drawable.list_normal_bg)
+                    binding.sequenceList.setBackgroundResource(R.drawable.list_normal_bg)
                 DragEvent.ACTION_DRAG_EXITED ->
-                    sequenceList.setBackgroundResource(R.drawable.list_normal_bg)
+                    binding.sequenceList.setBackgroundResource(R.drawable.list_normal_bg)
             }
             true
         }
@@ -158,6 +164,11 @@ class SequenceEditFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.fileList.refresh()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun subscribeUi() {
@@ -170,19 +181,19 @@ class SequenceEditFragment : Fragment() {
                         if (result is SequencePattern) {
                             val stringList: ArrayList<String> = ArrayList(result.sequenceContents);
                             Log.d(TAG, result.sequenceContents.toString())
-                            sequenceList.adapter = SequenceItemAdapter(stringList)
-                            reorderTouchHelper.attachToRecyclerView(sequenceList)
-                            sequenceName.setText(pattern.name?.replace(".seq", ""))
+                            binding.sequenceList.adapter = SequenceItemAdapter(stringList)
+                            reorderTouchHelper.attachToRecyclerView(binding.sequenceList)
+                            binding.sequenceName.setText(pattern.name?.replace(".seq", ""))
                         }
                     }
                 }
         } else {
             val stringList: ArrayList<String> = ArrayList()
-            sequenceList.adapter = SequenceItemAdapter(stringList)
-            reorderTouchHelper.attachToRecyclerView(sequenceList)
-            sequenceName.hint = "Enter Name"
+            binding.sequenceList.adapter = SequenceItemAdapter(stringList)
+            reorderTouchHelper.attachToRecyclerView(binding.sequenceList)
+            binding.sequenceName.hint = "Enter Name"
             pattern = SequencePattern("")
-            sequenceName.setText(pattern.name)
+            binding.sequenceName.setText(pattern.name)
         }
 
         viewModel.fileList.observe(viewLifecycleOwner) { result ->
@@ -197,7 +208,7 @@ class SequenceEditFragment : Fragment() {
                 .map(AbstractPattern::getName)
                 .collect(Collectors.toList())
             fileList.sortBy { item -> item.toLowerCase(Locale.getDefault()) }
-            filesList.adapter = SequenceFileAdapter(fileList)
+            binding.filesList.adapter = SequenceFileAdapter(fileList)
         }
     }
 

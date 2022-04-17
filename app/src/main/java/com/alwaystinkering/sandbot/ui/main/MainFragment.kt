@@ -16,13 +16,10 @@ import androidx.navigation.fragment.findNavController
 import com.alwaystinkering.sandbot.App
 import com.alwaystinkering.sandbot.R
 import com.alwaystinkering.sandbot.api.BotStatus
+import com.alwaystinkering.sandbot.databinding.FragmentMainBinding
 import com.alwaystinkering.sandbot.repo.SandbotRepository
 import com.alwaystinkering.sandbot.repo.SharedPreferencesManager
 import com.alwaystinkering.sandbot.ui.MainActivity
-import kotlinx.android.synthetic.main.card_controls.*
-import kotlinx.android.synthetic.main.card_led.*
-import kotlinx.android.synthetic.main.card_status.*
-import kotlinx.android.synthetic.main.card_storage.*
 import java.util.*
 import javax.inject.Inject
 
@@ -40,6 +37,8 @@ class MainFragment : Fragment() {
     lateinit var mainHandler: Handler
     var dontSetSeekbar = false
 
+    private var _binding: FragmentMainBinding? = null
+    private val binding get() = _binding!!
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -65,7 +64,8 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         //setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_main, container, false)
+        _binding = FragmentMainBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -85,8 +85,12 @@ class MainFragment : Fragment() {
         mainHandler.removeCallbacks(refreshStatusTask)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
-//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    //    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
 //        inflater.inflate(R.menu.menu_main, menu)
 //    }
 //
@@ -111,7 +115,7 @@ class MainFragment : Fragment() {
     // LED Switch handler
     private val switchHandler =
         CompoundButton.OnCheckedChangeListener { compoundButton, isChecked ->
-            ledBrightnessSeekBar.isEnabled = isChecked
+            binding.ledCard.ledBrightnessSeekBar.isEnabled = isChecked
             sandbotRepository.writeLedOnOff(isChecked)
         }
 
@@ -132,37 +136,37 @@ class MainFragment : Fragment() {
 
 
     private fun bindView() {
-        ledSwitch.setOnCheckedChangeListener(switchHandler)
-        ledBrightnessSeekBar.setOnSeekBarChangeListener(brightnessHandler)
+        binding.ledCard.ledSwitch.setOnCheckedChangeListener(switchHandler)
+        binding.ledCard.ledBrightnessSeekBar.setOnSeekBarChangeListener(brightnessHandler)
 
-        commandPlay.setOnClickListener {
+        binding.controlsCard.commandPlay.setOnClickListener {
             sandbotRepository.resume()
         }
 
-        commandPause.setOnClickListener {
+        binding.controlsCard.commandPause.setOnClickListener {
             sandbotRepository.pause()
         }
 
-        commandStop.setOnClickListener {
+        binding.controlsCard.commandStop.setOnClickListener {
             sandbotRepository.stop()
         }
 
-        commandHome.setOnClickListener {
+        binding.controlsCard.commandHome.setOnClickListener {
             sandbotRepository.home()
         }
 
         viewModel.fileListResult.observe(viewLifecycleOwner) { result ->
             if (result == null) {
-                storageText.text = "--/--"
+                binding.storageCard.storageText.text = "--/--"
             } else {
                 // Update the storage information
-                storageText.text = String.format(
+                binding.storageCard.storageText.text = String.format(
                     Locale.US,
                     resources.getString(R.string.disk_usage),
                     humanReadableByteCount(result.diskUsed!!, true),
                     humanReadableByteCount(result.diskSize!!, true)
                 )
-                storageProgress.progress =
+                binding.storageCard.storageProgress.progress =
                     (result.diskUsed!! * 100 / result.diskSize!!).toInt()
             }
         }
@@ -179,46 +183,46 @@ class MainFragment : Fragment() {
 
     private fun updateStatus(botStatus: BotStatus) {
 
-        ledSwitch.setOnCheckedChangeListener(null)
-        ledSwitch.isChecked = botStatus.ledOn == 1
-        ledBrightnessSeekBar.isEnabled = ledSwitch.isChecked
-        ledSwitch.setOnCheckedChangeListener(switchHandler)
+        binding.ledCard.ledSwitch.setOnCheckedChangeListener(null)
+        binding.ledCard.ledSwitch.isChecked = botStatus.ledOn == 1
+        binding.ledCard.ledBrightnessSeekBar.isEnabled = binding.ledCard.ledSwitch.isChecked
+        binding.ledCard.ledSwitch.setOnCheckedChangeListener(switchHandler)
 
         if (!dontSetSeekbar) {
-            ledBrightnessSeekBar.progress = botStatus.ledValue!!
+            binding.ledCard.ledBrightnessSeekBar.progress = botStatus.ledValue!!
         }
 
-        status_num_ops.text = botStatus.qd.toString()
+        binding.statusCard.statusNumOps.text = botStatus.qd.toString()
         when (botStatus.qd) {
             0 -> {
-                status_state_text.text =
+                binding.statusCard.statusStateText.text =
                     resources.getText(R.string.state_idle)
-                status_state_text.setBackgroundColor(requireContext().getColor(R.color.orange_idle))
+                binding.statusCard.statusStateText.setBackgroundColor(requireContext().getColor(R.color.orange_idle))
             }
             else -> {
-                status_state_text.text =
+                binding.statusCard.statusStateText.text =
                     resources.getText(R.string.state_running)
-                status_state_text.setBackgroundColor(requireContext().getColor(R.color.green_running))
+                binding.statusCard.statusStateText.setBackgroundColor(requireContext().getColor(R.color.green_running))
             }
 
         }
     }
 
     private fun setControlsEnabled(enabled: Boolean) {
-        ledSwitch.isEnabled = enabled
-        ledBrightnessSeekBar.isEnabled = enabled && ledSwitch.isChecked
-        commandPlay.isEnabled = enabled
-        commandHome.isEnabled = enabled
-        commandPause.isEnabled = enabled
-        commandStop.isEnabled = enabled
+        binding.ledCard.ledSwitch.isEnabled = enabled
+        binding.ledCard.ledBrightnessSeekBar.isEnabled = enabled && binding.ledCard.ledSwitch.isChecked
+        binding.controlsCard.commandPlay.isEnabled = enabled
+        binding.controlsCard.commandHome.isEnabled = enabled
+        binding.controlsCard.commandPause.isEnabled = enabled
+        binding.controlsCard.commandStop.isEnabled = enabled
         if (enabled) {
 
         } else {
-            status_state_text.text =
+            binding.statusCard.statusStateText.text =
                 resources.getText(R.string.state_disconnected)
-            status_state_text.setBackgroundColor(requireContext().getColor(R.color.red_error))
-            status_num_ops.text = "--"
-            storageText.text = "--/--"
+            binding.statusCard.statusStateText.setBackgroundColor(requireContext().getColor(R.color.red_error))
+            binding.statusCard.statusNumOps.text = "--"
+            binding.storageCard.storageText.text = "--/--"
         }
 
     }

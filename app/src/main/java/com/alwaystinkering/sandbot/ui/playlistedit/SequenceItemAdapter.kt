@@ -1,23 +1,35 @@
 package com.alwaystinkering.sandbot.ui.playlistedit
 
 import android.util.Log
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.alwaystinkering.sandbot.R
-import com.alwaystinkering.sandbot.util.inflater
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.card_sequence_item.*
+import com.alwaystinkering.sandbot.databinding.CardSequenceItemBinding
 import java.util.*
 
 class SequenceItemAdapter(val dataSet: MutableList<String>) :
     RecyclerView.Adapter<SequenceItemAdapter.SequenceItemViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SequenceItemViewHolder =
-        SequenceItemViewHolder(parent)
+    inner class SequenceItemViewHolder(val binding: CardSequenceItemBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SequenceItemViewHolder {
+        val binding =
+            CardSequenceItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return SequenceItemViewHolder(binding)
+    }
 
     override fun onBindViewHolder(holder: SequenceItemViewHolder, position: Int) {
-        holder.bind(dataSet[position])
+        with(holder) {
+            with(dataSet[position]) {
+                binding.seqDeleteItem.setOnClickListener {
+                    Log.d("SeqItemList", "Delete: ${dataSet[adapterPosition]}")
+                    dataSet.removeAt(adapterPosition)
+                    notifyItemRemoved(adapterPosition)
+                }
+                binding.sequenceItemName.setText(this)
+            }
+        }
     }
 
     override fun getItemCount(): Int = dataSet.size
@@ -29,24 +41,6 @@ class SequenceItemAdapter(val dataSet: MutableList<String>) :
     fun addItem(item: String) {
         if (item.isNotEmpty()) {
             dataSet.add(item)
-        }
-    }
-
-    inner class SequenceItemViewHolder(parent: ViewGroup) :
-        RecyclerView.ViewHolder(parent.inflater(R.layout.card_sequence_item)), LayoutContainer {
-
-        private val TAG = "SequenceItemViewHolder"
-
-        override val containerView: View?
-            get() = itemView
-
-        fun bind(item: String) {
-            seqDeleteItem.setOnClickListener {
-                Log.d("SeqItemList", "Delete: ${dataSet[adapterPosition]}")
-                dataSet.removeAt(adapterPosition)
-                notifyItemRemoved(adapterPosition)
-            }
-            sequenceItemName.setText(item)
         }
     }
 }
